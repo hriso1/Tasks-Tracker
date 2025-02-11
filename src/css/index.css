@@ -1,0 +1,243 @@
+
+/* 
+body{
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 300px 1fr; 
+    grid-template-rows: auto 1fr ; 
+    grid-template-areas: 
+    "navbar navbar"
+    "sidebar main"
+
+
+}
+
+nav{
+    top: 0;
+    position: sticky;
+    grid-area: navbar;
+    background-color: lightblue;
+    color: white;
+    padding: 1rem
+}
+
+aside{
+    height: calc(100vh - 135.33px) ;
+    top: 135.33px;
+    position: sticky;
+    align-self: start ;
+    grid-area: sidebar;
+    background-color: lightgreen;
+}
+
+main{
+    grid-area: main;
+}
+
+
+
+@media(max-width: 800px){
+    body{
+        grid-template-columns: 1fr;
+    }
+    aside{
+        position: fixed;
+        width: 300px;
+        display: none;
+    }
+    .show{
+        display: block;
+    }
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root{
+    --base-clr: #11121a;
+    --line-clr: #42434a;
+    --hove-clr: #222533;
+    --text-clr: #e6e6ef;
+    --accent-clr: #5e63ff;
+    --secondary-txt-clr: #b0b3c1;
+}
+
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html{
+    font-family: Poppins, 'Segow UI', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.5rem;
+}
+
+body{
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--base-clr);
+    color: var(--text-clr);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+    "sidebar navbar"
+    "sidebar main"
+}
+
+main{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas: 
+    
+    "left-side right-side"
+}
+
+.left-main{
+    grid-area: left-side;
+}
+
+.right-main{
+    grid-area: right-side;
+}
+
+main{
+    padding: min(30px, 7%)
+}
+
+main p{
+    color: bar(--secondary-txt-clr);
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+.icon{
+    width: 60px;
+    transform: translateY(4px);
+    /* margin-right: 10px; */
+}
+
+aside{
+    grid-area: sidebar;
+}
+
+nav{
+    grid-area: navbar;
+    border-bottom: 1px solid var(--line-clr);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.weather-div{
+    display: flex;
+    margin: 4px 10px 4px 0;
+    align-items:baseline;
+    gap: 8px;
+}
+
+.weather-div div:nth-of-type(2){
+    font-size: 40px;
+}
+.weather-div div:nth-of-type(3){
+    transform: translateY(-25px); /* Move it slightly up */
+}
+.weather-div div:nth-of-type(4){
+    bottom:0;
+    margin-top: 10px;
+}
+
+main{
+    grid-area: main;
+}
+
+
+#sidebar{
+    background-color: var(--base-clr);
+    box-sizing: border-box;
+    height: 100vh;
+    width: 250px;
+    padding: 5px 1em;
+    border-right: 1px solid var(--line-clr);
+
+    position: sticky;
+    top: 0;
+    align-self: start;
+    transition: 300ms ease-in-out;
+    overflow: hidden;
+    text-wrap: nowrap;
+}
+
+#sidebar.close{
+    padding: 5px;
+    width: 60px;
+}
+
+#sidebar ul{
+    list-style: none;
+}
+
+#sidebar > ul > li:first-child{
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 30px;
+    .logo{
+        font-weight: 600;
+    }
+}
+
+
+#sidebar ul li.active a {
+    color: var(--accent-clr);
+
+    svg {
+        fill: var(--accent-clr)
+    }
+}
+
+#sidebar a, #sidebar .logo{
+    border-radius: .5em;
+    padding: .85em;
+    text-decoration: none;
+    color: var(--text-clr);
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    cursor: pointer;
+}
+
+#sidebar svg{
+    flex-shrink: 0;
+    fill: var(--text-clr);
+}
+
+#sidebar a span{
+    flex-grow: 1; /* fills out the parent completly */
+}
+
+#sidebar a:hover{
+    background-color: var(--hove-clr);
+}
+
+#toggle-btn{
+    margin-left: auto;
+    padding: 1em;
+    border: none;
+    border-radius: .5em;
+    background: none;
+    cursor:pointer;
+
+    svg{
+        transition: rotate 150ms ease;
+    }
+
+}
+
+.rotate svg:last-child{
+    rotate: 180deg;
+}
+
+#toggle-btn:hover{
+    background-color: var(--hove-clr);
+}
+
+/* CSS pentru continutul din main */
+

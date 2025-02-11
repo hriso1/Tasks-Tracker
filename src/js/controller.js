@@ -12,8 +12,70 @@ import stormIcon from '../img/storm.png';
 import sunnyIcon from '../img/sunny.png';
 
 const divWeather = document.querySelector('.weather-place');
+const toggleButton = document.getElementById('toggle-btn');
+const sidebar = document.getElementById('sidebar');
+
+function toggleSidebar() {
+  sidebar.classList.toggle('close');
+  toggleButton.classList.toggle('rotate');
+}
+
+window.toggleSidebar = toggleSidebar;
 
 let latitude, longitude;
+
+const weatherIcons = {
+  1: day =>
+    day === 0 ? [halfMoonIcon, 'Clear Night'] : [sunnyIcon, 'Sunny Day'],
+  2: [partlyCloudIcon, 'Partly Cloud'],
+  3: [cloudyIcon, 'Cloudy'],
+  40: [fogIcon, 'Fog'],
+  41: [fogIcon, 'Fog'],
+  42: [fogIcon, 'Fog'],
+  43: [fogIcon, 'Fog'],
+  44: [fogIcon, 'Fog'],
+  45: [fogIcon, 'Fog'],
+  46: [fogIcon, 'Fog'],
+  47: [fogIcon, 'Fog'],
+  48: [fogIcon, 'Fog'],
+  49: [fogIcon, 'Fog'],
+
+  50: [drizzleIcon, 'Drizzle'],
+  51: [drizzleIcon, 'Drizzle'],
+  52: [drizzleIcon, 'Drizzle'],
+  53: [drizzleIcon, 'Drizzle'],
+  54: [drizzleIcon, 'Drizzle'],
+  55: [drizzleIcon, 'Drizzle'],
+  56: [drizzleIcon, 'Drizzle'],
+  57: [drizzleIcon, 'Drizzle'],
+  58: [drizzleIcon, 'Drizzle'],
+  59: [drizzleIcon, 'Drizzle'],
+
+  60: [heavyRainIcon, 'Heavy Rain'],
+  61: [heavyRainIcon, 'Heavy Rain'],
+  62: [heavyRainIcon, 'Heavy Rain'],
+  63: [heavyRainIcon, 'Heavy Rain'],
+  64: [heavyRainIcon, 'Heavy Rain'],
+  65: [heavyRainIcon, 'Heavy Rain'],
+  66: [heavyRainIcon, 'Heavy Rain'],
+  67: [heavyRainIcon, 'Heavy Rain'],
+  68: [heavyRainIcon, 'Heavy Rain'],
+  69: [heavyRainIcon, 'Heavy Rain'],
+
+  70: [snowIcon, 'Snow'],
+  71: [snowIcon, 'Snow'],
+  72: [snowIcon, 'Snow'],
+  73: [snowIcon, 'Snow'],
+
+  74: [frostIcon, 'Frost'],
+  75: [frostIcon, 'Frost'],
+
+  95: [stormIcon, 'Storm'],
+  96: [stormIcon, 'Storm'],
+  97: [stormIcon, 'Storm'],
+  98: [stormIcon, 'Storm'],
+  99: [stormIcon, 'Storm'],
+};
 
 if (navigator.geolocation)
   navigator.geolocation.getCurrentPosition(
@@ -44,27 +106,36 @@ const getWeather = async function (latitude, longitude) {
   }
 };
 
-const renderView = function (iconName) {
+const renderView = function (
+  [iconName, description],
+  temperature,
+  temperatureUnits
+) {
   let markup = `
-      <img src = ${iconName} alt='Sunny Weather' >
+ 
+  <div class='weather-div' >
+    <div>
+      <img class="icon icon-weather" src= ${iconName} alt='${description}' >
+     </div>
+     <div>  ${temperature} </div>
+    <div>  ${temperatureUnits} </div>
+    <div> ${description}</div>  
+  <div>
+
     `;
   divWeather.insertAdjacentHTML('afterbegin', markup);
 };
 
 const weatherView = async function (data) {
-  // const weatherCode = data.current_weather.weathercode;
-  // const day = data.current_weather.is_day;
+  // destructuram
+  const { weathercode, is_day: day, temperature } = data.current_weather;
+  const { temperature: temperatureUnits } = data.current_weather_units;
 
-  const { weathercode, is_day: day } = data.current_weather;
+  // daca tipul de date este sau nu o functie
+  const iconData =
+    typeof weatherIcons[weathercode] === 'function'
+      ? weatherIcons[weathercode](day)
+      : weatherIcons[weathercode];
 
-  if (weathercode === 1)
-    day === 0 ? renderView(halfMoonIcon) : renderView(sunnyIcon);
-  if (weathercode === 2) renderView(partlyCloudIcon);
-  if (weathercode === 3) renderView(cloudyIcon);
-  if (weathercode >= 40 && weathercode <= 49) renderView(fogIcon);
-  if (weathercode >= 50 && weathercode <= 59) renderView(drizzleIcon);
-  if (weathercode >= 60 && weathercode <= 69) renderView(heavyRainIcon);
-  if (weathercode >= 70 && weathercode <= 73) renderView(snowIcon);
-  if (weathercode >= 74 && weathercode <= 75) renderView(frostIcon);
-  if (weathercode >= 95 && weathercode <= 99) renderView(stormIcon);
+  if (iconData) renderView(iconData, temperature, temperatureUnits);
 };
