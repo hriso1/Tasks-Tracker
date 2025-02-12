@@ -10,21 +10,42 @@ import heavyRainIcon from '../img/heavy-rain.png';
 import snowIcon from '../img/snow.png';
 import stormIcon from '../img/storm.png';
 import sunnyIcon from '../img/sunny.png';
+import loadingIcon from '../img/loading.png';
 
 const divWeather = document.querySelector('.weather-place');
+const mainContainer = document.querySelector('.right-main');
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
+let latitude, longitude;
 
+const listContainer = document.querySelector('.list-pages');
+
+//////// Adauga clasa active linkului apasat
+
+listContainer.addEventListener('click', function (event) {
+  // Finds the clicked li
+  const clickedLi = event.target.closest('li');
+  if (!clickedLi || clickedLi.classList.contains('active')) return;
+
+  // Removes the active class from the current li
+  const activeLi = document.querySelector('.list-pages li.active');
+  if (activeLi) activeLi.classList.remove('active');
+
+  // Add the active class to the clicked li
+  clickedLi.classList.add('active');
+});
+
+/////////// Roteste iconita de la sidebar
 function toggleSidebar() {
   sidebar.classList.toggle('close');
   toggleButton.classList.toggle('rotate');
 }
-
+// allows the function to be used in directly in html document
 window.toggleSidebar = toggleSidebar;
 
-let latitude, longitude;
-
 const weatherIcons = {
+  0: day =>
+    day === 0 ? [halfMoonIcon, 'Clear Night'] : [sunnyIcon, 'Sunny Day'],
   1: day =>
     day === 0 ? [halfMoonIcon, 'Clear Night'] : [sunnyIcon, 'Sunny Day'],
   2: [partlyCloudIcon, 'Partly Cloud'],
@@ -77,13 +98,31 @@ const weatherIcons = {
   99: [stormIcon, 'Storm'],
 };
 
+const renderLoading = function (parentElement) {
+  const markup = `
+    <div class="loading" >
+        <img src=${loadingIcon} description="loading spinner" >
+     </div>
+  `;
+  parentElement.innerHTML = '';
+  parentElement.insertAdjacentHTML('afterbegin', markup);
+};
+
+// 1) Loading weather data
+// renderLoading(mainContainer);
+renderLoading(divWeather);
+
 if (navigator.geolocation)
   navigator.geolocation.getCurrentPosition(
     async function (position) {
       latitude = position.coords.latitude;
       longitude = position.coords.longitude;
       console.log(latitude, longitude);
+
+      // Datele despre vreme sunt in data
       const data = await getWeather(latitude, longitude);
+
+      // Se randeaza in html vremea
       weatherView(data);
     },
     function () {
@@ -97,10 +136,33 @@ const getWeather = async function (latitude, longitude) {
       `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
     );
     const data = await response.json();
-    console.log('Data is ', data);
-    console.log(data.current_weather.weathercode);
+    let weather = data.current_weather;
+    weather = {
+      interval: weather.interval,
+      isDay: weather.is_day,
+      temperature: weather.temperature,
+      time: weather.time,
+      weatherCode: weather.weathercode,
+      windDirection: weather.winddirection,
+      windSpeed: weather.windspeed,
+    };
 
-    return data;
+    let weatherUnits = data.current_weather_units;
+
+    weatherUnits = {
+      intervalUnits: weatherUnits.interval,
+      isDayUnits: weatherUnits.is_day,
+      temperatureUnits: weatherUnits.temperature,
+      timeUnits: weatherUnits.time,
+      weatherCodeUnits: weatherUnits.weathercode,
+      windDirectionUnits: weatherUnits.winddirection,
+      windSpeedUnits: weatherUnits.windspeed,
+    };
+
+    console.log(weather);
+    console.log(weatherUnits);
+
+    return { weather, weatherUnits };
   } catch (error) {
     console.error(error);
   }
@@ -111,7 +173,7 @@ const renderView = function (
   temperature,
   temperatureUnits
 ) {
-  let markup = `
+  const markup = `
  
   <div class='weather-div' >
     <div>
@@ -123,19 +185,19 @@ const renderView = function (
   <div>
 
     `;
+  divWeather.innerHTML = '';
   divWeather.insertAdjacentHTML('afterbegin', markup);
 };
 
 const weatherView = async function (data) {
   // destructuram
-  const { weathercode, is_day: day, temperature } = data.current_weather;
-  const { temperature: temperatureUnits } = data.current_weather_units;
+  const { weatherCode, isDay, temperature } = data.weather;
+  const { temperatureUnits } = data.weatherUnits;
 
   // daca tipul de date este sau nu o functie
   const iconData =
-    typeof weatherIcons[weathercode] === 'function'
-      ? weatherIcons[weathercode](day)
-      : weatherIcons[weathercode];
-
+    typeof weatherIcons[weatherCode] === 'function'
+      ? weatherIcons[weatherCode](isDay)
+      : weatherIcons[weatherCode];
   if (iconData) renderView(iconData, temperature, temperatureUnits);
 };

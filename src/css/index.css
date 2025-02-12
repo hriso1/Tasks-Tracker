@@ -1,55 +1,3 @@
-
-/* 
-body{
-    min-height: 100vh;
-    display: grid;
-    grid-template-columns: 300px 1fr; 
-    grid-template-rows: auto 1fr ; 
-    grid-template-areas: 
-    "navbar navbar"
-    "sidebar main"
-
-
-}
-
-nav{
-    top: 0;
-    position: sticky;
-    grid-area: navbar;
-    background-color: lightblue;
-    color: white;
-    padding: 1rem
-}
-
-aside{
-    height: calc(100vh - 135.33px) ;
-    top: 135.33px;
-    position: sticky;
-    align-self: start ;
-    grid-area: sidebar;
-    background-color: lightgreen;
-}
-
-main{
-    grid-area: main;
-}
-
-
-
-@media(max-width: 800px){
-    body{
-        grid-template-columns: 1fr;
-    }
-    aside{
-        position: fixed;
-        width: 300px;
-        display: none;
-    }
-    .show{
-        display: block;
-    }
-} */
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 :root{
     --base-clr: #11121a;
@@ -78,83 +26,91 @@ body{
     color: var(--text-clr);
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: 111px 1fr;
     grid-template-areas: 
     "sidebar navbar"
     "sidebar main"
 }
 
-main{
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas: 
-    
-    "left-side right-side"
-}
 
-.left-main{
-    grid-area: left-side;
-}
 
-.right-main{
-    grid-area: right-side;
-}
 
-main{
-    padding: min(30px, 7%)
-}
+/* Navbar */
+/* Navbar */
+/* Navbar */
 
-main p{
-    color: bar(--secondary-txt-clr);
-    margin-top: 5px;
-    margin-bottom: 15px;
-}
-
-.icon{
-    width: 60px;
-    transform: translateY(4px);
-    /* margin-right: 10px; */
-}
-
-aside{
-    grid-area: sidebar;
-}
 
 nav{
     grid-area: navbar;
     border-bottom: 1px solid var(--line-clr);
     display: flex;
     justify-content: flex-end;
+    /* background-color: lightblue; */
 }
+
+/* .weather-place{
+    background-color: #5e63ff;
+} */
 
 .weather-div{
     display: flex;
     margin: 4px 10px 4px 0;
     align-items:baseline;
-    gap: 8px;
+    gap: 0.3em;
+}
+
+.loading{
+    text-align: center;
+    padding-bottom: 8px;
+}
+
+.loading img{
+    margin-right: 100px;
+    width: 6em;
+    animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate{
+    0%{
+        transform: rotate(0);
+    }
+    100%{
+        transform: rotate(360deg)
+    }
+}
+
+.icon{
+    width: 6em;
+    transform: translateY(0.4em);
 }
 
 .weather-div div:nth-of-type(2){
-    font-size: 40px;
+    font-size: 2.6em;
 }
 .weather-div div:nth-of-type(3){
-    transform: translateY(-25px); /* Move it slightly up */
+    font-size: 1.4em;
+    transform: translateY(-1em); /* Move it slightly up */
+    margin-left: -4px;
 }
 .weather-div div:nth-of-type(4){
     bottom:0;
-    margin-top: 10px;
+    /* margin-top: 10px; */
+    font-size: 1.4em;
 }
 
-main{
-    grid-area: main;
-}
 
+/* Sidebar  */
+/* Sidebar  */
+/* Sidebar  */
+aside{
+    grid-area: sidebar;
+}
 
 #sidebar{
     background-color: var(--base-clr);
     box-sizing: border-box;
     height: 100vh;
-    width: 250px;
+    width: 260px;
     padding: 5px 1em;
     border-right: 1px solid var(--line-clr);
 
@@ -168,7 +124,7 @@ main{
 
 #sidebar.close{
     padding: 5px;
-    width: 60px;
+    width: 74px;
 }
 
 #sidebar ul{
@@ -200,7 +156,7 @@ main{
     color: var(--text-clr);
     display: flex;
     align-items: center;
-    gap: 1em;
+    gap: 1.3em;
     cursor: pointer;
 }
 
@@ -209,8 +165,10 @@ main{
     fill: var(--text-clr);
 }
 
+
 #sidebar a span{
     flex-grow: 1; /* fills out the parent completly */
+    font-size: 24px;
 }
 
 #sidebar a:hover{
@@ -240,4 +198,115 @@ main{
 }
 
 /* CSS pentru continutul din main */
+/* CSS pentru continutul din main */
+/* CSS pentru continutul din main */
 
+
+main{
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    grid-template-areas: 
+    
+    "left-side right-side"
+}
+
+.left-main{
+    grid-area: left-side;
+    /* background-color: beige; */
+    border: 1px solid var(--line-clr);
+}
+
+.right-main{
+    grid-area: right-side;
+    /* background-color: lightcoral; */
+    border: 1px solid var(--line-clr);
+}
+
+main{
+    padding: min(20px, 7%);
+    padding-bottom: 0;
+}
+
+main p{
+    color: bar(--secondary-txt-clr);
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+main{
+    grid-area: main;
+}
+
+/* Responsive design */
+/* Responsive design */
+/* Responsive design */
+
+@media(max-width: 800px){
+    body{
+        grid-template-columns: 1fr;
+        grid-template-rows: 64px 1fr;
+        grid-template-areas: 
+        "navbar"
+        "main"
+    }
+
+    .icon{
+        width: 3em;
+    }
+
+    .weather-div div:nth-of-type(2){
+        font-size:1.6em;
+    }
+
+    .weather-div div:nth-of-type(3){
+        font-size: 1em;
+        transform: translateY(-0.7em);
+    }
+
+    .weather-div div:nth-of-type(4){
+        font-size: 0.9em;
+    }
+
+    main{
+        padding: 1em 1em 60px 1em;
+    }
+
+    #sidebar{
+        height: 60px;
+        width: 100%;
+        border-right: none;
+        border-top: 1px solid var(--line-clr);
+        padding: 0;
+        position: fixed;
+        top: unset;
+        bottom: 0;
+
+        > ul{
+            padding: 0;
+            display: grid;
+            grid-auto-columns: 60px;
+            grid-auto-flow: column; /*fiecare li are 60px si e o noua coloana */
+            align-items: center;
+            overflow-x: scroll; /* te lasa sa dai scroll pe axa X in caz de sunt prea multe elemente*/
+
+        }
+        ul li{
+            height: 100%;
+        }
+
+        ul a{
+            width: 60px;
+            height: 60px;
+            padding: 0;
+            border-radius: 0;
+            justify-content: center;
+        }
+ 
+        
+        ul li span, ul li:first-child, svg:last-child{
+            display: none;
+        }    
+    }
+
+
+}
