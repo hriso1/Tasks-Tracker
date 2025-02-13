@@ -1,5 +1,7 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
+import * as model from './model.js';
+
 import partlyCloudIcon from '../img/cloudy-day.png';
 import cloudyIcon from '../img/cloudy.png';
 import drizzleIcon from '../img/drizzle.png';
@@ -16,7 +18,6 @@ const divWeather = document.querySelector('.weather-place');
 const mainContainer = document.querySelector('.right-main');
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
-let latitude, longitude;
 
 const listContainer = document.querySelector('.list-pages');
 
@@ -98,6 +99,8 @@ const weatherIcons = {
   99: [stormIcon, 'Storm'],
 };
 
+///////////////////////////////////////////////////// Render the markup for the loading spinner
+
 const renderLoading = function (parentElement) {
   const markup = `
     <div class="loading" >
@@ -107,68 +110,45 @@ const renderLoading = function (parentElement) {
   parentElement.innerHTML = '';
   parentElement.insertAdjacentHTML('afterbegin', markup);
 };
+///////////////////////////////////////////////////// From the user gets the latitude and longitude
 
-// 1) Loading weather data
-// renderLoading(mainContainer);
-renderLoading(divWeather);
-
-if (navigator.geolocation)
-  navigator.geolocation.getCurrentPosition(
-    async function (position) {
-      latitude = position.coords.latitude;
-      longitude = position.coords.longitude;
-      console.log(latitude, longitude);
-
-      // Datele despre vreme sunt in data
-      const data = await getWeather(latitude, longitude);
-
-      // Se randeaza in html vremea
-      weatherView(data);
-    },
-    function () {
-      alert('Could not get your position');
+const getCoordinates = function () {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        () => {
+          reject('Could not get your position');
+        }
+      );
+    } else {
+      reject('Geolocation is not supported by this browser');
     }
-  );
+  });
+};
+///////////////////////////////////////////////////// Function to get the data bout the weather
 
-const getWeather = async function (latitude, longitude) {
+const initWeatherApp = async function () {
   try {
-    const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
-    );
-    const data = await response.json();
-    let weather = data.current_weather;
-    weather = {
-      interval: weather.interval,
-      isDay: weather.is_day,
-      temperature: weather.temperature,
-      time: weather.time,
-      weatherCode: weather.weathercode,
-      windDirection: weather.winddirection,
-      windSpeed: weather.windspeed,
-    };
-
-    let weatherUnits = data.current_weather_units;
-
-    weatherUnits = {
-      intervalUnits: weatherUnits.interval,
-      isDayUnits: weatherUnits.is_day,
-      temperatureUnits: weatherUnits.temperature,
-      timeUnits: weatherUnits.time,
-      weatherCodeUnits: weatherUnits.weathercode,
-      windDirectionUnits: weatherUnits.winddirection,
-      windSpeedUnits: weatherUnits.windspeed,
-    };
-
-    console.log(weather);
-    console.log(weatherUnits);
-
-    return { weather, weatherUnits };
+    renderLoading(divWeather);
+    const { latitude, longitude } = await getCoordinates();
+    await model.loadWeatherData(latitude, longitude);
+    weatherView(model.state);
   } catch (error) {
     console.error(error);
   }
 };
 
-const renderView = function (
+initWeatherApp();
+
+///////////////////////////////////////////////////// Function to prepare the markup Weather to be rendered
+
+const renderWeatherView = function (
   [iconName, description],
   temperature,
   temperatureUnits
@@ -189,7 +169,9 @@ const renderView = function (
   divWeather.insertAdjacentHTML('afterbegin', markup);
 };
 
-const weatherView = async function (data) {
+///////////////////////////////////////////////////// Function that uses the weather data and the markup
+
+const weatherView = function (data) {
   // destructuram
   const { weatherCode, isDay, temperature } = data.weather;
   const { temperatureUnits } = data.weatherUnits;
@@ -199,5 +181,5 @@ const weatherView = async function (data) {
     typeof weatherIcons[weatherCode] === 'function'
       ? weatherIcons[weatherCode](isDay)
       : weatherIcons[weatherCode];
-  if (iconData) renderView(iconData, temperature, temperatureUnits);
+  if (iconData) renderWeatherView(iconData, temperature, temperatureUnits);
 };
