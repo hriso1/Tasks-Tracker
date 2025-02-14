@@ -1,6 +1,12 @@
+import { weatherIcons } from './helpers.js';
+import { API_URL_WEATHER } from './config.js';
+import { getJSON } from './helpers.js';
+
 export const state = {
   weather: {},
   weatherUnits: {},
+  weatherIcons,
+  coordinates: {},
 };
 
 const createWeatherObject = function (data) {
@@ -28,18 +34,57 @@ const createWeatherUnitsObject = function (data) {
   };
 };
 
-export const loadWeatherData = async function (latitude, longitude) {
+const createCoordinatesObject = function (data) {
+  // const coordinates = await getCoordinates();
+  const coordinates = data;
+  return {
+    latitude: coordinates.latitude,
+    longitude: coordinates.longitude,
+  };
+};
+
+///////////////////////////////////////////////////// From the user gets the latitude and longitude
+const getCoordinates = function () {
+  return new Promise((resolve, reject) => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          resolve({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+        },
+        () => {
+          reject('Could not get your position');
+        }
+      );
+    } else {
+      reject('Geolocation is not supported by this browser');
+    }
+  });
+};
+
+///////////////////////////////////////////////////// Aici se creeaza obiectul coordinates ce ajunge in state
+
+export const loadCoordinates = async function () {
+  const data = await getCoordinates();
+  console.log(data);
+  state.coordinates = createCoordinatesObject(data);
+};
+
+///////////////////////////////////////////////////// folosind un weather API, se creeaza obiectele weather si weatherUnits in state
+export const loadWeatherInformation = async function (latitude, longitude) {
   try {
-    const response = await fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+    // const response = await fetch(
+    //   `${API_URL_WEATHER}?latitude=${latitude}&longitude=${longitude}&current_weather=true`
+    // );
+    // const data = await response.json();
+    const data = await getJSON(
+      `${API_URL_WEATHER}?latitude=${latitude}&longitude=${longitude}&current_weather=true`
     );
-    const data = await response.json();
 
     state.weather = createWeatherObject(data);
     state.weatherUnits = createWeatherUnitsObject(data);
-
-    console.log(state.weather);
-    console.log(state.weatherUnits);
   } catch (error) {
     console.error(error);
   }
