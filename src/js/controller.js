@@ -2,6 +2,8 @@ import 'core-js';
 import 'regenerator-runtime/runtime';
 import * as model from './model.js';
 import weatherView from './views/weatherView.js';
+import quotesView from './views/quotesView.js';
+import { motivationQuotes } from './helpers.js';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -54,8 +56,21 @@ const controlWeather = async function () {
   }
 };
 
+const controlQuotes = function () {
+  quotesView.render();
+};
+
+const generateRandom = function () {
+  const randomNumber = Math.floor(Math.random() * 10);
+  console.log(randomNumber);
+  console.log(motivationQuotes[randomNumber]);
+  // return motivationQuotes[randomNumber];
+};
+
 const init = function () {
   weatherView.addHandlerRenderWeather(controlWeather);
+  controlQuotes();
+  // generateRandom();
 };
 
 init();

@@ -1,18 +1,19 @@
+import View from './View.js';
 import loadingIcon from '../../img/loading.png';
 
-class WeatherView {
-  #parentElement = document.querySelector('.weather-place');
-  #data;
+class WeatherView extends View {
+  _parentElement = document.querySelector('.weatherData-container');
+  _data;
 
   render(data) {
-    this.#data = data; // data = model.state -> weather and weatherUnits objects
-    const markup = this.#generateMarkup();
-    this.#clear();
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    this._data = data; // data = model.state -> weather and weatherUnits objects
+    const markup = this._generateMarkup();
+    this._clear();
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
-  #clear() {
-    this.#parentElement.innerHTML = '';
+  _clear() {
+    this._parentElement.innerHTML = '';
   }
 
   renderLoading() {
@@ -21,30 +22,30 @@ class WeatherView {
         <img src=${loadingIcon} description="loading spinner" >
      </div>
   `;
-    this.#parentElement.innerHTML = '';
-    this.#parentElement.insertAdjacentHTML('afterbegin', markup);
+    this._parentElement.innerHTML = '';
+    this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
   addHandlerRenderWeather(handler) {
     window.addEventListener('load', handler);
   }
 
-  #generateMarkup() {
+  _generateMarkup() {
     const iconData =
-      typeof this.#data.weatherIcons[this.#data.weather.weatherCode] ===
+      typeof this._data.weatherIcons[this._data.weather.weatherCode] ===
       'function'
-        ? this.#data.weatherIcons[this.#data.weather.weatherCode](
-            this.#data.weather.isDay
+        ? this._data.weatherIcons[this._data.weather.weatherCode](
+            this._data.weather.isDay
           )
-        : this.#data.weatherIcons[this.#data.weather.weatherCode];
+        : this._data.weatherIcons[this._data.weather.weatherCode];
 
     return `
   <div class='weather-div' >
     <div>
       <img class="icon icon-weather" src= ${iconData[0]} alt='${iconData[1]}' >
      </div>
-     <div>  ${this.#data.weather.temperature} </div>
-    <div>  ${this.#data.weatherUnits.temperatureUnits} </div>
+     <div>  ${this._data.weather.temperature} </div>
+    <div>  ${this._data.weatherUnits.temperatureUnits} </div>
     <div> ${iconData[1]}</div>  
   <div>
 

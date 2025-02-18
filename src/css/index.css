@@ -43,14 +43,52 @@ body{
 nav{
     grid-area: navbar;
     border-bottom: 1px solid var(--line-clr);
-    display: flex;
-    justify-content: flex-end;
-    /* background-color: lightblue; */
+    
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    grid-template-areas: 
+    "motivationalQuotes-container weatherData-container"
+
 }
 
-/* .weather-place{
-    background-color: #5e63ff;
-} */
+/* Quotes part */
+/* Quotes part */
+/* Quotes part */
+
+.motivationalQuotes-container{
+    grid-area: 'motivationalQuotes-container';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    /* position: relative; */
+    padding: min(20px, 7%);
+
+
+}
+
+.quote{
+    font-size: 1.6em;
+    position: relative;
+
+}
+
+.author{
+    position: absolute;
+    /* bottom: -40px; */
+    right: 0;
+    font-size: 0.8em ;
+}
+
+/* Weather part */
+/* Weather part */
+/* Weather part */
+
+.weatherData-container{
+    grid-area: 'weatherData-container';
+    /* background-color: blueviolet; */
+}
+
 
 .weather-div{
     display: flex;
@@ -110,7 +148,7 @@ aside{
     background-color: var(--base-clr);
     box-sizing: border-box;
     height: 100vh;
-    width: 260px;
+    width: 200px;
     padding: 5px 1em;
     border-right: 1px solid var(--line-clr);
 
@@ -124,7 +162,7 @@ aside{
 
 #sidebar.close{
     padding: 5px;
-    width: 74px;
+    width: 66px;
 }
 
 #sidebar ul{
@@ -168,7 +206,11 @@ aside{
 
 #sidebar a span{
     flex-grow: 1; /* fills out the parent completly */
-    font-size: 24px;
+    font-size: 20px;
+}
+
+#sidebar span{
+    padding: 6px 0 0 0;
 }
 
 #sidebar a:hover{
@@ -196,6 +238,12 @@ aside{
 #toggle-btn:hover{
     background-color: var(--hove-clr);
 }
+
+#sidebar svg {
+    width: 28px;  /* Change the width */
+    height: 28px; /* Change the height */
+}
+
 
 /* CSS pentru continutul din main */
 /* CSS pentru continutul din main */
