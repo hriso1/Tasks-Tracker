@@ -61,10 +61,7 @@ nav{
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    /* position: relative; */
     padding: min(20px, 7%);
-
-
 }
 
 .quote{
@@ -292,7 +289,7 @@ main{
 @media(max-width: 800px){
     body{
         grid-template-columns: 1fr;
-        grid-template-rows: 64px 1fr;
+        grid-template-rows: 1fr 9fr;
         grid-template-areas: 
         "navbar"
         "main"
@@ -302,8 +299,42 @@ main{
         width: 3em;
     }
 
+
+    /* navbar */
+    /* navbar */
+    /* navbar */
+
+    /* quotes container */
+    /* quotes container */
+    /* quotes container */
+
+    nav{
+        grid-template-columns: 1fr minmax(80px, 140px) ;
+
+    }
+    
+    .weatherData-container{
+        grid-area: 'weatherData-container';
+    }
+        
+    .motivationalQuotes-container{
+       font-size: 0.6em;
+       justify-content: start;
+       display: flex;
+       padding: 20px 10px 20px 20px;
+    }
+    .author{
+       display: none;
+    }
+
+    .weatherData-container{
+        width: 80px;
+        flex-wrap: nowrap;
+    }
+
     .weather-div div:nth-of-type(2){
-        font-size:1.6em;
+    
+        font-size:1em;
     }
 
     .weather-div div:nth-of-type(3){

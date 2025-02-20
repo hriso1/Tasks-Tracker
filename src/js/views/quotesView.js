@@ -21,7 +21,7 @@ class QuotesView extends View {
             ${this._generateRandom().quote}
               <div class="author" >
            - ${this._generateRandom().author}
-        </div>
+                </div>
         </div>
       
     `;

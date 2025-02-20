@@ -35,7 +35,7 @@
             </li>
             <li class="active" >
                 <a id="home-page" >
-                    <svg xmlns="http://www.w3.org/2000/svg"  height="24spx" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg"  height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/></svg>
                     <span>Home</span>
                 </a>
             </li>
@@ -52,7 +52,29 @@
     <!-- Main  -->
     <main>
         <div class="left-main" >
-            left-leftleft-leftleft-leftleft-left
+            <button>+</button> <span>add new task</span>
+            <div class="task-container" >
+                <div>
+                    <span>Task</span><input type="text" id="input-tasks" placeholder="task" >
+    
+                </div>
+                <div>
+                    <input type="text" list="category-list" id="input-categories" placeholder="category" >
+                    <datalist id="category-list" >
+                        <option>Office</option>
+                        <option>Sala</option>
+                        <option>Scoala</option>
+                    </datalist>
+                    <select name="colours" id="colours">
+                        <option value="white" >white</option>
+                        <option value="lightblue" >lightblue</option>
+                        <option value="yellow" >yellow</option>
+                    </select>
+                </div>
+                <div class="add-task-container" >
+                    <button class="add-task-button" >Add task</button>
+                </div>
+            </div>
         </div>
         <div class="right-main" >
             right
