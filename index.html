@@ -28,7 +28,7 @@
     <aside id="sidebar" >
         <ul class="list-pages" >
             <li>
-                <span class="logo" ><h3>Todo app</h3></span>
+                <span class="logo" ><h4>Todo app</h4></span>
                 <button id="toggle-btn" onclick="toggleSidebar()" >
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg>
                 </button>
@@ -52,11 +52,9 @@
     <!-- Main  -->
     <main>
         <div class="left-main" >
-            <button>+</button> <span>add new task</span>
-            <div class="task-container" >
+            <form class="newTask-container" >
                 <div>
-                    <span>Task</span><input type="text" id="input-tasks" placeholder="task" >
-    
+                    <span>Add new Task</span><input type="text" id="input-tasks" placeholder="task" >
                 </div>
                 <div>
                     <input type="text" list="category-list" id="input-categories" placeholder="category" >
@@ -72,9 +70,12 @@
                     </select>
                 </div>
                 <div class="add-task-container" >
-                    <button class="add-task-button" >Add task</button>
+                    <button type="submit" class="add-task-button" >Add task</button>
                 </div>
-            </div>
+            </form>
+            <ul class="tasks-list" >
+                
+            </ul>
         </div>
         <div class="right-main" >
             right

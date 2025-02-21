@@ -26,7 +26,7 @@ body{
     color: var(--text-clr);
     display: grid;
     grid-template-columns: auto 1fr;
-    grid-template-rows: 111px 1fr;
+    grid-template-rows: 80px 1fr;
     grid-template-areas: 
     "sidebar navbar"
     "sidebar main"
@@ -61,11 +61,11 @@ nav{
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    padding: min(20px, 7%);
+    height: 80px;
 }
 
 .quote{
-    font-size: 1.6em;
+    font-size: 1em;
     position: relative;
 
 }
@@ -83,6 +83,8 @@ nav{
 
 .weatherData-container{
     grid-area: 'weatherData-container';
+    height: 80px;
+
     /* background-color: blueviolet; */
 }
 
@@ -92,6 +94,8 @@ nav{
     margin: 4px 10px 4px 0;
     align-items:baseline;
     gap: 0.3em;
+    height: 80px;
+
 }
 
 .loading{
@@ -101,7 +105,7 @@ nav{
 
 .loading img{
     margin-right: 100px;
-    width: 6em;
+    width: 3em;
     animation: rotate 2s infinite linear;
 }
 
@@ -115,12 +119,12 @@ nav{
 }
 
 .icon{
-    width: 6em;
+    width: 4em;
     transform: translateY(0.4em);
 }
 
 .weather-div div:nth-of-type(2){
-    font-size: 2.6em;
+    font-size: 1.6em;
 }
 .weather-div div:nth-of-type(3){
     font-size: 1.4em;
@@ -130,7 +134,7 @@ nav{
 .weather-div div:nth-of-type(4){
     bottom:0;
     /* margin-top: 10px; */
-    font-size: 1.4em;
+    font-size: 1.3em;
 }
 
 
@@ -145,7 +149,7 @@ aside{
     background-color: var(--base-clr);
     box-sizing: border-box;
     height: 100vh;
-    width: 200px;
+    width: 160px;
     padding: 5px 1em;
     border-right: 1px solid var(--line-clr);
 
@@ -159,8 +163,15 @@ aside{
 
 #sidebar.close{
     padding: 5px;
-    width: 66px;
+    width: 56px;
 }
+#sidebar.close h4{
+    margin-right: 10px;
+}
+#sidebar.close .logo{
+    padding: 0.85em
+}
+
 
 #sidebar ul{
     list-style: none;
@@ -203,7 +214,7 @@ aside{
 
 #sidebar a span{
     flex-grow: 1; /* fills out the parent completly */
-    font-size: 20px;
+    font-size: 1rem;
 }
 
 #sidebar span{
@@ -216,7 +227,7 @@ aside{
 
 #toggle-btn{
     margin-left: auto;
-    padding: 1em;
+    padding: 0.85em;
     border: none;
     border-radius: .5em;
     background: none;
@@ -237,8 +248,8 @@ aside{
 }
 
 #sidebar svg {
-    width: 28px;  /* Change the width */
-    height: 28px; /* Change the height */
+    width: 23px;  /* Change the width */
+    height: 23px; /* Change the height */
 }
 
 
@@ -249,17 +260,72 @@ aside{
 
 main{
     display: grid;
-    grid-template-columns: 360px 1fr;
+    grid-template-columns: 200px 1fr;
     grid-template-areas: 
-    
     "left-side right-side"
 }
+
+/* Left main - Tasks */
+/* Left main - Tasks */
+/* Left main - Tasks */
 
 .left-main{
     grid-area: left-side;
     /* background-color: beige; */
     border: 1px solid var(--line-clr);
 }
+
+.newTask-container {
+    background-color: #545677;
+    height: 100px;
+    width: 90%;
+    margin: auto;
+    margin-top: 4px;
+    padding: 0.2em;
+    border-radius: 4px;
+    border: 1px solid var(--line-clr)
+}
+
+#input-tasks {
+    width: 96%;
+}
+
+#input-categories{
+    width: 40%;
+}
+
+#colours{
+    margin-left: 13%;
+}
+
+.task-container{
+    width: 86%;
+    margin: auto;
+    margin-top: 4px;
+    border: 1px solid var(--line-clr);
+    border-radius: 10px;
+    padding: 8px;
+    color: black;
+    
+}
+
+.task-container button{
+    all: unset;
+    cursor: pointer;
+    /* background-color: none; */
+    /* padding: 3px;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    border: 1px solid black; */
+}
+.task-container img{
+    width: 20px;
+    background-color: none;
+}
+
+
+/* Right main - Calendar */
 
 .right-main{
     grid-area: right-side;
@@ -268,6 +334,8 @@ main{
 }
 
 main{
+    grid-area: main;
+
     padding: min(20px, 7%);
     padding-bottom: 0;
 }
@@ -278,9 +346,8 @@ main p{
     margin-bottom: 15px;
 }
 
-main{
-    grid-area: main;
-}
+
+
 
 /* Responsive design */
 /* Responsive design */
