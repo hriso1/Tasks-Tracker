@@ -146,7 +146,7 @@ function renderTasks() {
       task => `
       <div class="task-container" data-id="${
         task.id
-      }" style="background-color: ${task.colour}" >
+      }" style="background-color: ${task.colour}" draggable='true' >
         <input class='check-input' type='checkbox' ${
           task.completed ? 'checked' : ''
         }  >

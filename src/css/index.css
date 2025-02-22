@@ -109,6 +109,7 @@ nav{
     animation: rotate 2s infinite linear;
 }
 
+
 @keyframes rotate{
     0%{
         transform: rotate(0);
@@ -143,6 +144,10 @@ nav{
 /* Sidebar  */
 aside{
     grid-area: sidebar;
+}
+
+li img{
+    filter: invert(1);
 }
 
 #sidebar{
@@ -188,16 +193,12 @@ aside{
 
 
 #sidebar ul li.active a {
-    color: var(--accent-clr);
-
-    svg {
-        fill: var(--accent-clr)
-    }
+    background-color: var(--hove-clr);
 }
 
 #sidebar a, #sidebar .logo{
     border-radius: .5em;
-    padding: .85em;
+    padding: .75em;
     text-decoration: none;
     color: var(--text-clr);
     display: flex;
@@ -206,7 +207,7 @@ aside{
     cursor: pointer;
 }
 
-#sidebar svg{
+#sidebar img{
     flex-shrink: 0;
     fill: var(--text-clr);
 }
@@ -233,13 +234,13 @@ aside{
     background: none;
     cursor:pointer;
 
-    svg{
+    img{
         transition: rotate 150ms ease;
     }
 
 }
 
-.rotate svg:last-child{
+.rotate img:last-child{
     rotate: 180deg;
 }
 
@@ -247,7 +248,7 @@ aside{
     background-color: var(--hove-clr);
 }
 
-#sidebar svg {
+#sidebar img {
     width: 23px;  /* Change the width */
     height: 23px; /* Change the height */
 }
@@ -273,17 +274,20 @@ main{
     grid-area: left-side;
     /* background-color: beige; */
     border: 1px solid var(--line-clr);
+    height: 800px;
+    overflow: auto;
 }
 
 .newTask-container {
-    background-color: #545677;
+    /* background-color: #545677; */
     height: 100px;
     width: 90%;
     margin: auto;
     margin-top: 4px;
     padding: 0.2em;
     border-radius: 4px;
-    border: 1px solid var(--line-clr)
+    border: 1px solid var(--line-clr);
+    margin-bottom: 10px;
 }
 
 #input-tasks {
@@ -449,7 +453,7 @@ main p{
         }
  
         
-        ul li span, ul li:first-child, svg:last-child{
+        ul li span, ul li:first-child, img:last-child{
             display: none;
         }    
     }

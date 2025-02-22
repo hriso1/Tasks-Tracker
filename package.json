@@ -12,5 +12,8 @@
     "core-js": "^3.40.0",
     "parcel": "^2.13.3",
     "regenerator-runtime": "^0.14.1"
+  },
+  "devDependencies": {
+    "svgo": "^3.3.2"
   }
 }
