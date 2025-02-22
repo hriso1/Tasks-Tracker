@@ -6,9 +6,58 @@ import quotesView from './views/quotesView.js';
 import { motivationQuotes } from './helpers.js';
 import deleteIcon from '../img/delete.png';
 
+import { Calendar } from '@fullcalendar/core';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
 const sidebarListContainer = document.querySelector('.list-pages');
+
+function addCalendar() {
+  document.addEventListener('DOMContentLoaded', function () {
+    // const Calendar = FullCalendar.Calendar;
+    // const Draggable = FullCalendar.Draggable;
+
+    const calendarEl = document.getElementById('calendar');
+
+    /////////////////////////////// make tasks draggable
+
+    new Draggable(tasksList, {
+      itemSelector: '.task-container',
+      eventData: function (eventElement) {
+        return {
+          title: eventElement.innerText,
+        };
+      },
+    });
+
+    /////////////////////////////// initiate the calendar
+
+    let calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      },
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar
+      // drop: function (info) {
+      //   // is the "remove after drop" checkbox checked?
+      //   if (checkbox.checked) {
+      //     // if so, remove the element from the "Draggable Events" list
+      //     info.draggedEl.parentNode.removeChild(info.draggedEl);
+      //   }
+      // },
+    });
+
+    calendar.render();
+  });
+}
+addCalendar();
 
 ////////////////////////////////////////////////////// Adauga clasa active linkului apasat
 

@@ -9,6 +9,11 @@
   "author": "Andrei Hrisotimos",
   "license": "ISC",
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/list": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
     "core-js": "^3.40.0",
     "parcel": "^2.13.3",
     "regenerator-runtime": "^0.14.1"
