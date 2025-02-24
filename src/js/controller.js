@@ -16,49 +16,6 @@ const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
 const sidebarListContainer = document.querySelector('.list-pages');
 
-function addCalendar() {
-  document.addEventListener('DOMContentLoaded', function () {
-    // const Calendar = FullCalendar.Calendar;
-    // const Draggable = FullCalendar.Draggable;
-
-    const calendarEl = document.getElementById('calendar');
-
-    /////////////////////////////// make tasks draggable
-
-    new Draggable(tasksList, {
-      itemSelector: '.task-container',
-      eventData: function (eventElement) {
-        return {
-          title: eventElement.innerText,
-        };
-      },
-    });
-
-    /////////////////////////////// initiate the calendar
-
-    let calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay',
-      },
-      editable: true,
-      droppable: true, // this allows things to be dropped onto the calendar
-      // drop: function (info) {
-      //   // is the "remove after drop" checkbox checked?
-      //   if (checkbox.checked) {
-      //     // if so, remove the element from the "Draggable Events" list
-      //     info.draggedEl.parentNode.removeChild(info.draggedEl);
-      //   }
-      // },
-    });
-
-    calendar.render();
-  });
-}
-addCalendar();
-
 ////////////////////////////////////////////////////// Adauga clasa active linkului apasat
 
 sidebarListContainer.addEventListener('click', function (event) {
@@ -125,7 +82,6 @@ const init = function () {
 
 init();
 
-///// Pentru maine
 const inputTasks = document.getElementById('input-tasks');
 const inputCategory = document.getElementById('input-categories');
 const selectedColour = document.getElementById('colours');
@@ -152,10 +108,11 @@ function saveTasks(tasks) {
 //////////////////////////////////////////////////////// Creates the taks object
 function getTaskDetails() {
   return {
+    id: crypto.randomUUID(),
     task: inputTasks.value,
+    title: inputTasks.value,
     category: inputCategory.value,
     colour: selectedColour.value,
-    id: crypto.randomUUID(),
     completed: false,
   };
 }
@@ -239,3 +196,103 @@ function handleDeleteTask(event, tasks, taskId, targetedTask) {
     targetedTask.remove(); // Remove task from UI
   }
 }
+
+////////////////////////////////////////////////////// Calendar
+
+function addCalendar(tasks) {
+  document.addEventListener('DOMContentLoaded', function () {
+    // const Calendar = FullCalendar.Calendar;
+    // const Draggable = FullCalendar.Draggable;
+
+    const calendarEl = document.getElementById('calendar');
+
+    /////////////////////////////// make tasks draggable
+
+    new Draggable(tasksList, {
+      itemSelector: '.task-container',
+      eventData: function (eventElement) {
+        return {
+          title: eventElement.innerText,
+        };
+      },
+    });
+
+    /////////////////////////////// initiate the calendar
+    let x;
+
+    let calendar = new Calendar(calendarEl, {
+      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay',
+      },
+      editable: true,
+      droppable: true,
+      titleFormat: {
+        month: 'long',
+        year: 'numeric',
+        day: 'numeric',
+        weekday: 'long',
+      },
+      eventReceive: function (info) {
+        console.log(info);
+        console.log(info.draggedEl.dataset.id);
+        const idEvent = info.draggedEl.dataset.id;
+        let tasks = getTasks();
+        tasks.forEach(function (task) {
+          if (task.id === idEvent) {
+            task.start = info.event._instance.range.start;
+          }
+        });
+        saveTasks(tasks);
+      },
+      eventDrop: function (info) {
+        console.log(info.event);
+        const idEventDrop = info.event._def.publicId;
+        let tasks = getTasks();
+        tasks.forEach(function (task) {
+          if (task.id === idEventDrop) {
+            task.start = info.event._instance.range.start;
+          }
+        });
+        saveTasks(tasks);
+      },
+      events: tasks,
+    });
+
+    calendar.render();
+  });
+}
+addCalendar(getTasks());
+
+const month = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
+
+const changeDate = function (date) {
+  // array cu fiecare cuvant
+  const dateSepareted = date.split(' ');
+  console.log(dateSepareted);
+  // luna -> string: ex Feb
+  const monthOfDate = dateSepareted[3];
+  //luna -> numar: ex 1 - 1
+  const monthNumber = month.indexOf(monthOfDate) + 1;
+  // Chande the date from month string to number
+  monthString = monthNumber < 10 ? `0${monthNumber}` : `${monthNumber}`;
+  dateSepareted[3] = monthString; /// 2
+
+  return `${dateSepareted[5]}-${dateSepareted[3]}-${dateSepareted[4]}`;
+};
