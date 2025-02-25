@@ -6,6 +6,7 @@
     --text-clr: #e6e6ef;
     --accent-clr: #5e63ff;
     --secondary-txt-clr: #b0b3c1;
+    --fc-today-bg-color: rgba(0, 255, 234, 0.146) !important;
 }
 
 
@@ -272,12 +273,13 @@ main{
 
 .left-main{
     grid-area: left-side;
-    /* background-color: beige; */
     border: 1px solid var(--line-clr);
     height: 800px;
     overflow: auto;
 }
 
+  
+  
 .newTask-container {
     /* background-color: #545677; */
     height: 100px;

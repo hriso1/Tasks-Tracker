@@ -68,7 +68,6 @@ const getCoordinates = function () {
 
 export const loadCoordinates = async function () {
   const data = await getCoordinates();
-  console.log(data);
   state.coordinates = createCoordinatesObject(data);
 };
 

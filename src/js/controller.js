@@ -3,14 +3,15 @@ import 'regenerator-runtime/runtime';
 import * as model from './model.js';
 import weatherView from './views/weatherView.js';
 import quotesView from './views/quotesView.js';
-import { motivationQuotes } from './helpers.js';
-import deleteIcon from '../img/delete.png';
+import deleteIcon from '../img/deleteRed.png';
+import { month } from './helpers.js';
 
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import { EventImpl } from '@fullcalendar/core/internal';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -56,7 +57,6 @@ const controlWeather = async function () {
     );
 
     // 4) render the weatherView using the data that was created in the model
-    console.log(model.state);
     weatherView.render(model.state);
   } catch (error) {
     console.error(error);
@@ -67,17 +67,9 @@ const controlQuotes = function () {
   quotesView.render();
 };
 
-// const generateRandom = function () {
-//   const randomNumber = Math.floor(Math.random() * 10);
-//   console.log(randomNumber);
-//   console.log(motivationQuotes[randomNumber]);
-//   // return motivationQuotes[randomNumber];
-// };
-
 const init = function () {
   weatherView.addHandlerRenderWeather(controlWeather);
   controlQuotes();
-  // generateRandom();
 };
 
 init();
@@ -90,7 +82,7 @@ const tasksList = document.querySelector('.tasks-list');
 const form = document.querySelector('.newTask-container');
 
 //////////////////////////////////////////////////////// Ia tasks din localStorage
-function getTasks() {
+function getTasksFromLocalS() {
   const tasks = localStorage.getItem('tasks');
   try {
     return tasks ? JSON.parse(tasks) : []; // Ensure JSON parsing doesn't break
@@ -102,7 +94,7 @@ function getTasks() {
 }
 //////////////////////////////////////////////////////// Salveaza un task in localStorage
 
-function saveTasks(tasks) {
+function saveTaksInLocalS(tasks) {
   localStorage.setItem('tasks', JSON.stringify(tasks));
 }
 //////////////////////////////////////////////////////// Creates the taks object
@@ -112,7 +104,7 @@ function getTaskDetails() {
     task: inputTasks.value,
     title: inputTasks.value,
     category: inputCategory.value,
-    colour: selectedColour.value,
+    backgroundColor: selectedColour.value,
     completed: false,
   };
 }
@@ -125,9 +117,9 @@ function clearForm() {
 }
 //////////////////////////////////////////////////////// Adauga taskul nou in LocalStorage
 function addTaskToLocalStorage(task) {
-  const tasks = getTasks();
+  const tasks = getTasksFromLocalS();
   tasks.push(task);
-  saveTasks(tasks);
+  saveTaksInLocalS(tasks);
 }
 
 //////////////////////////////////////////////////////// Generate markup on display
@@ -146,13 +138,13 @@ form.addEventListener('submit', function (e) {
 window.addEventListener('load', renderTasks);
 
 function renderTasks() {
-  const tasksLocalStorage = getTasks();
+  const tasksLocalStorage = getTasksFromLocalS();
   tasksList.innerHTML = tasksLocalStorage
     .map(
       task => `
       <div class="task-container" data-id="${
         task.id
-      }" style="background-color: ${task.colour}" draggable='true' >
+      }" style="background-color: ${task.backgroundColor}" draggable='true' >
         <input class='check-input' type='checkbox' ${
           task.completed ? 'checked' : ''
         }  >
@@ -165,14 +157,14 @@ function renderTasks() {
     .join('');
 }
 
-//////////////////////////// Event delegation for checked task
+//////////////////////////// Event delegation for checked task and delete task
 
 tasksList.addEventListener('click', function (event) {
   const targetedTask = event.target.closest('.task-container');
   if (!targetedTask) return; // If no task container is found, exit
 
   const taskId = targetedTask.getAttribute('data-id');
-  let tasks = getTasks();
+  let tasks = getTasksFromLocalS();
 
   handleCheckBox(event, tasks, taskId);
   handleDeleteTask(event, tasks, taskId, targetedTask);
@@ -185,21 +177,55 @@ function handleCheckBox(event, tasks, taskId) {
       return;
     }
     task.completed = !task.completed;
-    saveTasks(tasks);
+    saveTaksInLocalS(tasks);
   }
 }
 
 function handleDeleteTask(event, tasks, taskId, targetedTask) {
   if (event.target.closest('.button-delete')) {
     tasks = tasks.filter(task => task.id !== taskId);
-    saveTasks(tasks);
+    saveTaksInLocalS(tasks);
     targetedTask.remove(); // Remove task from UI
   }
 }
 
+////////////////////////////////////////////////// Gets all the events of the calendar from local storage
+function getEventsFromLocalStorage() {
+  const events = localStorage.getItem('events');
+  try {
+    return events ? JSON.parse(events) : [];
+  } catch (error) {
+    console.error("Can't get events from local storage");
+    localStorage.removeItem('events');
+    return [];
+  }
+}
+
+/////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
+function saveEventInLocalStorage(events) {
+  localStorage.setItem('events', JSON.stringify(events));
+}
+
+/////////////////////////////////////////////////// Creates a new event in the calendar
+function newEventCalendar(idEvent, startEvent) {
+  const tasks = getTasksFromLocalS();
+  const events = getEventsFromLocalStorage();
+  let event = {};
+  /// Creez o copie a taskului si ii schimb id-ul
+  tasks.forEach(function (task) {
+    if (task.id === idEvent) {
+      event = structuredClone(task);
+      event.id = crypto.randomUUID();
+      event.start = startEvent;
+    }
+  });
+  events.push(event);
+  saveEventInLocalStorage(events);
+}
+
 ////////////////////////////////////////////////////// Calendar
 
-function addCalendar(tasks) {
+function addCalendar(events) {
   document.addEventListener('DOMContentLoaded', function () {
     // const Calendar = FullCalendar.Calendar;
     // const Draggable = FullCalendar.Draggable;
@@ -218,7 +244,6 @@ function addCalendar(tasks) {
     });
 
     /////////////////////////////// initiate the calendar
-    let x;
 
     let calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
@@ -228,71 +253,89 @@ function addCalendar(tasks) {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay',
       },
+      initialView: 'timeGridWeek',
       editable: true,
       droppable: true,
+      nowIndicator: true,
+      // selectable: true,
       titleFormat: {
         month: 'long',
         year: 'numeric',
         day: 'numeric',
         weekday: 'long',
       },
+      eventContent: function (arg) {
+        let eventTitle = document.createElement('span');
+        eventTitle.innerText = arg.event.title;
+        // Create button
+        let deleteButton = document.createElement('button');
+        // deleteButton.style.all = 'unset';
+        deleteButton.style.marginLeft = '5px';
+
+        deleteButton.style.cursor = 'pointer';
+        deleteButton.style.all = 'unset';
+
+        let imgIcon = document.createElement('img');
+        imgIcon.src = `${deleteIcon}`;
+        imgIcon.alt = 'delete button';
+        imgIcon.width = 20;
+        imgIcon.height = 20;
+
+        deleteButton.appendChild(imgIcon);
+        deleteButton.onclick = function () {
+          let events = getEventsFromLocalStorage();
+          let idEvent = arg.event._def.publicId;
+          console.log(idEvent);
+          events = events.filter(event => event.id !== idEvent);
+          console.log(events);
+          saveEventInLocalStorage(events);
+          arg.event.remove();
+        };
+
+        let eventContainer = document.createElement('div');
+        eventContainer.appendChild(eventTitle);
+        eventContainer.appendChild(deleteButton);
+        eventContainer.style.backgroundColor = arg.backgroundColor;
+        eventContainer.style.color = 'black';
+        eventContainer.style.overflow = 'hidden';
+
+        return { domNodes: [eventContainer] };
+      },
       eventReceive: function (info) {
         console.log(info);
-        console.log(info.draggedEl.dataset.id);
         const idEvent = info.draggedEl.dataset.id;
-        let tasks = getTasks();
-        tasks.forEach(function (task) {
-          if (task.id === idEvent) {
-            task.start = info.event._instance.range.start;
-          }
-        });
-        saveTasks(tasks);
+
+        tasks = getTasksFromLocalS();
+        task = tasks.filter(task => task.id === idEvent);
+        let color = task[0].backgroundColor;
+        console.log(color);
+
+        // info.event.setProp('backgroundColor', task.backgroundColor);
+        info.event.setProp('backgroundColor', color);
+        info.event.setProp('textColor', 'black');
+
+        const startEvent = info.event._instance.range.start;
+        newEventCalendar(idEvent, startEvent);
       },
       eventDrop: function (info) {
-        console.log(info.event);
         const idEventDrop = info.event._def.publicId;
-        let tasks = getTasks();
-        tasks.forEach(function (task) {
-          if (task.id === idEventDrop) {
-            task.start = info.event._instance.range.start;
+        let events = getEventsFromLocalStorage();
+        events.forEach(function (event) {
+          if (event.id === idEventDrop) {
+            event.start = info.event._instance.range.start;
           }
         });
-        saveTasks(tasks);
+        saveEventInLocalStorage(events);
       },
-      events: tasks,
+      eventClick: function (info) {
+        /////////////////////// Trebuie sa creez un pop up in care sa editez evenimentul si cu un buton de sters
+      },
+
+      events: events,
     });
 
     calendar.render();
   });
 }
-addCalendar(getTasks());
 
-const month = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
-const changeDate = function (date) {
-  // array cu fiecare cuvant
-  const dateSepareted = date.split(' ');
-  console.log(dateSepareted);
-  // luna -> string: ex Feb
-  const monthOfDate = dateSepareted[3];
-  //luna -> numar: ex 1 - 1
-  const monthNumber = month.indexOf(monthOfDate) + 1;
-  // Chande the date from month string to number
-  monthString = monthNumber < 10 ? `0${monthNumber}` : `${monthNumber}`;
-  dateSepareted[3] = monthString; /// 2
-
-  return `${dateSepareted[5]}-${dateSepareted[3]}-${dateSepareted[4]}`;
-};
+addCalendar(getEventsFromLocalStorage());

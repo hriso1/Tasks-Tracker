@@ -11,7 +11,6 @@ class QuotesView extends View {
 
   _generateRandom() {
     const randomNumber = Math.floor(Math.random() * motivationQuotes.length);
-    console.log(randomNumber);
     return motivationQuotes[randomNumber];
   }
 
