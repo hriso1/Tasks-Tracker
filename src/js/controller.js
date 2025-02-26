@@ -202,12 +202,12 @@ function getEventsFromLocalStorage() {
 }
 
 /////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
-function saveEventInLocalStorage(events) {
+function saveEventsInLocalStorage(events) {
   localStorage.setItem('events', JSON.stringify(events));
 }
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
-function newEventCalendar(idEvent, startEvent) {
+function newEventCalendar(idEvent, startEvent, endEvent) {
   const tasks = getTasksFromLocalS();
   const events = getEventsFromLocalStorage();
   let event = {};
@@ -217,10 +217,11 @@ function newEventCalendar(idEvent, startEvent) {
       event = structuredClone(task);
       event.id = crypto.randomUUID();
       event.start = startEvent;
+      event.end = endEvent;
     }
   });
   events.push(event);
-  saveEventInLocalStorage(events);
+  saveEventsInLocalStorage(events);
 }
 
 ////////////////////////////////////////////////////// Calendar
@@ -247,6 +248,7 @@ function addCalendar(events) {
 
     let calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+      timeZone: 'UTC',
 
       headerToolbar: {
         left: 'prev,next today',
@@ -255,6 +257,7 @@ function addCalendar(events) {
       },
       initialView: 'timeGridWeek',
       editable: true,
+      eventStartEditable: true,
       droppable: true,
       nowIndicator: true,
       // selectable: true,
@@ -265,15 +268,18 @@ function addCalendar(events) {
         weekday: 'long',
       },
       eventContent: function (arg) {
+        // console.log('Arg este', arg);
+
+        // Create time display
+        let eventTime = document.createElement('span');
+        eventTime.innerText = arg.timeText;
+
+        // Create title
         let eventTitle = document.createElement('span');
         eventTitle.innerText = arg.event.title;
         // Create button
         let deleteButton = document.createElement('button');
-        // deleteButton.style.all = 'unset';
-        deleteButton.style.marginLeft = '5px';
-
-        deleteButton.style.cursor = 'pointer';
-        deleteButton.style.all = 'unset';
+        deleteButton.classList.add('event-delete-button');
 
         let imgIcon = document.createElement('img');
         imgIcon.src = `${deleteIcon}`;
@@ -285,14 +291,14 @@ function addCalendar(events) {
         deleteButton.onclick = function () {
           let events = getEventsFromLocalStorage();
           let idEvent = arg.event._def.publicId;
-          console.log(idEvent);
           events = events.filter(event => event.id !== idEvent);
-          console.log(events);
-          saveEventInLocalStorage(events);
+          saveEventsInLocalStorage(events);
           arg.event.remove();
         };
 
         let eventContainer = document.createElement('div');
+        eventContainer.classList.add('event-container');
+        eventContainer.appendChild(eventTime);
         eventContainer.appendChild(eventTitle);
         eventContainer.appendChild(deleteButton);
         eventContainer.style.backgroundColor = arg.backgroundColor;
@@ -308,14 +314,26 @@ function addCalendar(events) {
         tasks = getTasksFromLocalS();
         task = tasks.filter(task => task.id === idEvent);
         let color = task[0].backgroundColor;
-        console.log(color);
 
         // info.event.setProp('backgroundColor', task.backgroundColor);
         info.event.setProp('backgroundColor', color);
         info.event.setProp('textColor', 'black');
 
+        // get start and endEvent
         const startEvent = info.event._instance.range.start;
-        newEventCalendar(idEvent, startEvent);
+        let endEvent = info.event._instance.range.end;
+        console.log(startEvent);
+        console.log(endEvent);
+
+        if (info.event._context.viewApi.type === 'dayGridMonth') {
+          startEvent.setHours(8);
+          endEvent = new Date(startEvent);
+          endEvent.setHours(10);
+        }
+        console.log(startEvent);
+        console.log(endEvent);
+
+        newEventCalendar(idEvent, startEvent, endEvent);
       },
       eventDrop: function (info) {
         const idEventDrop = info.event._def.publicId;
@@ -323,12 +341,24 @@ function addCalendar(events) {
         events.forEach(function (event) {
           if (event.id === idEventDrop) {
             event.start = info.event._instance.range.start;
+            event.end = info.event._instance.range.end;
           }
         });
-        saveEventInLocalStorage(events);
+        saveEventsInLocalStorage(events);
+      },
+      eventResize: function (info) {
+        console.log(info.event._instance.range.end);
+        let events = getEventsFromLocalStorage();
+        const idElement = info.event._def.publicId;
+        events.forEach(event => {
+          if (event.id === idElement)
+            event.end = info.event._instance.range.end;
+        });
+        saveEventsInLocalStorage(events);
       },
       eventClick: function (info) {
         /////////////////////// Trebuie sa creez un pop up in care sa editez evenimentul si cu un buton de sters
+        console.log(info);
       },
 
       events: events,
@@ -339,3 +369,14 @@ function addCalendar(events) {
 }
 
 addCalendar(getEventsFromLocalStorage());
+
+function changeStartEventTime(startEventTime, endEventTime) {
+  let startArray = startEventTime.split(' ');
+  startArray[4] = '08:00:00';
+  let start = startArray.join(' ');
+  let endArray = startEventTime.split(' ');
+  let end = endArray.join(' ');
+  endArray[4] = '10:00:00';
+
+  return [start, end];
+}

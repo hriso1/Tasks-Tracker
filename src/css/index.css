@@ -278,6 +278,8 @@ main{
     overflow: auto;
 }
 
+
+
   
   
 .newTask-container {
@@ -332,6 +334,10 @@ main{
 
 
 /* Right main - Calendar */
+/* Right main - Tasks */
+/* Right main - Tasks */
+/* Right main - Tasks */
+
 
 .right-main{
     grid-area: right-side;
@@ -350,6 +356,12 @@ main p{
     color: bar(--secondary-txt-clr);
     margin-top: 5px;
     margin-bottom: 15px;
+}
+
+.event-delete-button{
+    margin-left: 5px;
+    cursor: pointer;
+    all: unset;
 }
 
 
