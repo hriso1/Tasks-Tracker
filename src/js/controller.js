@@ -311,8 +311,8 @@ function addCalendar(events) {
         console.log(info);
         const idEvent = info.draggedEl.dataset.id;
 
-        tasks = getTasksFromLocalS();
-        task = tasks.filter(task => task.id === idEvent);
+        const tasks = getTasksFromLocalS();
+        let task = tasks.filter(task => task.id === idEvent);
         let color = task[0].backgroundColor;
 
         // info.event.setProp('backgroundColor', task.backgroundColor);
