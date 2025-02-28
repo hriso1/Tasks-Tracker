@@ -249,7 +249,6 @@ function addCalendar(events) {
     let calendar = new Calendar(calendarEl, {
       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
       timeZone: 'UTC',
-
       headerToolbar: {
         left: 'prev,next today',
         center: 'title',
