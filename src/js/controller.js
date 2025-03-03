@@ -11,7 +11,6 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import { EventImpl } from '@fullcalendar/core/internal';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -233,6 +232,14 @@ function addCalendar(events) {
 
     const calendarEl = document.getElementById('calendar');
 
+    var nowLocal = new Date();
+    var nowUTC = new Date(
+      nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000
+    );
+
+    console.log(nowLocal);
+    console.log(nowUTC.toISOString());
+
     /////////////////////////////// make tasks draggable
 
     new Draggable(tasksList, {
@@ -259,6 +266,8 @@ function addCalendar(events) {
       eventStartEditable: true,
       droppable: true,
       nowIndicator: true,
+      now: nowUTC.toISOString(),
+      // contentHeight: 760,
       // selectable: true,
       titleFormat: {
         month: 'long',
@@ -301,8 +310,6 @@ function addCalendar(events) {
         eventContainer.appendChild(eventTitle);
         eventContainer.appendChild(deleteButton);
         eventContainer.style.backgroundColor = arg.backgroundColor;
-        eventContainer.style.color = 'black';
-        eventContainer.style.overflow = 'hidden';
 
         return { domNodes: [eventContainer] };
       },

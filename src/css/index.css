@@ -274,8 +274,17 @@ main{
 .left-main{
     grid-area: left-side;
     border: 1px solid var(--line-clr);
-    height: 800px;
+    height: calc(100vh - 80px - 20px - 2px) !important ;
     overflow: auto;
+    position: sticky;
+    top:0;
+    bottom: 0;
+}
+
+.fc {
+    height: calc(100vh - 80px - 20px - 2px - 10px ) !important ;
+    width: 98%;
+    margin: 10px  auto 0px auto;
 }
 
 
@@ -332,6 +341,14 @@ main{
     background-color: none;
 }
 
+.event-container{
+    overflow: hidden;
+    color:#11121a;
+    border-radius: 4px;
+    height: 100%;
+
+}
+
 
 /* Right main - Calendar */
 /* Right main - Tasks */
@@ -348,7 +365,7 @@ main{
 main{
     grid-area: main;
 
-    padding: min(20px, 7%);
+    padding: 20px;
     padding-bottom: 0;
 }
 
