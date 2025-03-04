@@ -386,3 +386,27 @@ function changeStartEventTime(startEventTime, endEventTime) {
 
   return [start, end];
 }
+
+const dialogElement = document.querySelector('dialog');
+const openDialogButton = document.querySelector('.open-form');
+const closeDialogButton = document.querySelector('.close-button-form');
+
+openDialogButton.addEventListener('click', function () {
+  dialogElement.showModal();
+});
+
+closeDialogButton.addEventListener('click', function () {
+  dialogElement.close();
+});
+
+dialogElement.addEventListener('click', e => {
+  const dialogDimensions = dialogElement.getBoundingClientRect();
+  if (
+    e.clientX < dialogDimensions.left ||
+    e.clientX > dialogDimensions.right ||
+    e.clientY < dialogDimensions.top ||
+    e.clientY > dialogDimensions.bottom
+  ) {
+    dialogElement.close();
+  }
+});

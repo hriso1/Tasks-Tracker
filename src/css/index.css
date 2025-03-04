@@ -491,3 +491,123 @@ main p{
 
 
 }
+
+dialog {
+    margin: auto;
+    z-index: 10;
+    border: solid 1px rgb(188, 188, 255);
+    width: 400px;
+    height: 400px;
+    background-color: #efefef;
+    border-radius: 4px;
+}
+
+dialog img {
+    width: 24px;
+    height: 24px;
+}
+
+
+.close-header-form{
+    display: flex;
+    justify-content: flex-end;
+
+}
+
+
+.close-header-form{
+    height: 34px;
+    display: flex;
+    border-radius: 4px;
+
+}
+
+.draggable-header-form {
+
+    flex: 1;
+    transition: 0.15s ;
+}
+.draggable-header-form:hover{
+    background-color: rgba(184, 184, 184, 0.568);
+    cursor:move;
+}
+
+
+.close-button-form{
+    all:unset;
+    height: inherit;
+    transition: 0.15s ;
+}
+
+
+.draggable-header-form:hover +.close-button-form {
+    background-color: rgba(184, 184, 184, 0.568);
+    
+}
+
+.close-button-form{
+    transition: 0.15s ;
+    padding-right: 10px;
+}
+
+.close-button-form img:hover {
+    background-color: #b9b9b9;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.input-title-form{
+    border-bottom: solid 1px black;
+    margin: 4px 20px;
+    margin-left: calc(20px + 1em + 24px);
+
+}
+
+.input-title-form input{
+    border: none;
+    width: 100%;
+    font-size: 1.6em;
+    background-color: inherit;
+}
+.input-title-form input:focus{
+    outline: none;
+}
+
+/*Div cu toate elementele din form fara input */
+/*Div cu toate elementele din form fara input */
+/*Div cu toate elementele din form fara input */
+.form-new-task{
+    margin-top: 10px;
+}
+
+.form-information{
+    margin: 10px 20px;
+}
+
+.form-description{
+    display: flex;
+    gap: 1em;
+}
+
+
+textarea{
+    background-color: rgb(216, 216, 216);
+    width: 100%;
+    resize: none;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background-color 0.15s;
+    border: none;
+}
+
+textarea:focus{
+    outline: none;
+}
+
+textarea:hover{
+    background-color: rgb(198, 198, 198);
+}
+
+/* dialog::backdrop {
+    background-color: rgba(126, 126, 126, 0.3);
+} */
