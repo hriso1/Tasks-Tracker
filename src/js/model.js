@@ -9,6 +9,10 @@ export const state = {
   coordinates: {},
 };
 
+export const stateTasks = {
+  tasks: [],
+};
+
 const createWeatherObject = function (data) {
   const weather = data.current_weather;
   return {
@@ -87,4 +91,21 @@ export const loadWeatherInformation = async function (latitude, longitude) {
   } catch (error) {
     console.error(error);
   }
+};
+
+//////////////////////////////////////////////////////////// Adaug un nou task in tasks
+
+export const addTask = function (newTask) {
+  // Aici va fi un nod sau ceva de taskuri
+  // primesc newTask care e ceva nod nebunii vezi cum arata
+  // faci un array cu datele folosind Object.entries(newTask)
+  // Creez un obiect task cu o functie createTaskObject --> trb sa faci functia --> trebuia sa ii creez un id unic
+  // Ii dau push obiectului in tasks -> stateTasks.tasks.push(object)
+
+  // Salvez in baza de date cu o functie persistTasks
+  persistTasks();
+};
+
+export const persistTasks = function (tasks) {
+  localStorage.setItem('tasks', JSON.stringify(tasks));
 };

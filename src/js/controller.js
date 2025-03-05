@@ -3,8 +3,9 @@ import 'regenerator-runtime/runtime';
 import * as model from './model.js';
 import weatherView from './views/weatherView.js';
 import quotesView from './views/quotesView.js';
+import addTaskView from './views/addTaskView.js';
+
 import deleteIcon from '../img/deleteRed.png';
-import { month } from './helpers.js';
 
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -65,13 +66,6 @@ const controlWeather = async function () {
 const controlQuotes = function () {
   quotesView.render();
 };
-
-const init = function () {
-  weatherView.addHandlerRenderWeather(controlWeather);
-  controlQuotes();
-};
-
-init();
 
 const inputTasks = document.getElementById('input-tasks');
 const inputCategory = document.getElementById('input-categories');
@@ -376,37 +370,32 @@ function addCalendar(events) {
 
 addCalendar(getEventsFromLocalStorage());
 
-function changeStartEventTime(startEventTime, endEventTime) {
-  let startArray = startEventTime.split(' ');
-  startArray[4] = '08:00:00';
-  let start = startArray.join(' ');
-  let endArray = startEventTime.split(' ');
-  let end = endArray.join(' ');
-  endArray[4] = '10:00:00';
+// const dialogElement = document.querySelector('dialog');
+// const openDialogButton = document.querySelector('.open-form');
+// const closeDialogButton = document.querySelector('.close-button-form');
 
-  return [start, end];
-}
+// openDialogButton.addEventListener('click', function () {
+//   dialogElement.showModal();
+// });
 
-const dialogElement = document.querySelector('dialog');
-const openDialogButton = document.querySelector('.open-form');
-const closeDialogButton = document.querySelector('.close-button-form');
+// closeDialogButton.addEventListener('click', function () {
+//   dialogElement.close();
+// });
 
-openDialogButton.addEventListener('click', function () {
-  dialogElement.showModal();
-});
+const controlTask = function (newTask) {
+  // 1) Create task in model
+  model.addTask(newTask);
 
-closeDialogButton.addEventListener('click', function () {
-  dialogElement.close();
-});
+  // 2) Adaug in baza de date noul Task
+  model.persistTasks(model.stateTasks.tasks);
 
-dialogElement.addEventListener('click', e => {
-  const dialogDimensions = dialogElement.getBoundingClientRect();
-  if (
-    e.clientX < dialogDimensions.left ||
-    e.clientX > dialogDimensions.right ||
-    e.clientY < dialogDimensions.top ||
-    e.clientY > dialogDimensions.bottom
-  ) {
-    dialogElement.close();
-  }
-});
+  // Afiseaza noul task in lista de taskuri --> ceva previewTask.update(
+};
+
+const init = function () {
+  weatherView.addHandlerRenderWeather(controlWeather);
+  controlQuotes();
+  addTaskView.addHandlerNewTask(controlTask);
+};
+
+init();

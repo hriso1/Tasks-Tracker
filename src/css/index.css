@@ -608,6 +608,6 @@ textarea:hover{
     background-color: rgb(198, 198, 198);
 }
 
-/* dialog::backdrop {
+dialog::backdrop {
     background-color: rgba(126, 126, 126, 0.3);
-} */
+}
