@@ -4,6 +4,7 @@ import * as model from './model.js';
 import weatherView from './views/weatherView.js';
 import quotesView from './views/quotesView.js';
 import addTaskView from './views/addTaskView.js';
+import taskListView from './views/taskListView.js';
 
 import deleteIcon from '../img/deleteRed.png';
 
@@ -45,7 +46,7 @@ window.toggleSidebar = toggleSidebar;
 const controlWeather = async function () {
   try {
     // 1) Render loading spinner
-    weatherView.renderLoading();
+    // weatherView.renderLoading();
 
     // 2) Get the latidude and longitude
     await model.loadCoordinates();
@@ -231,9 +232,6 @@ function addCalendar(events) {
       nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000
     );
 
-    console.log(nowLocal);
-    console.log(nowUTC.toISOString());
-
     /////////////////////////////// make tasks draggable
 
     new Draggable(tasksList, {
@@ -311,8 +309,11 @@ function addCalendar(events) {
         console.log(info);
         const idEvent = info.draggedEl.dataset.id;
 
+        // const tasks = model.getTasksLocalStorage();
         const tasks = getTasksFromLocalS();
         let task = tasks.filter(task => task.id === idEvent);
+        console.log(task);
+        // let color = task[0].categoryColor;
         let color = task[0].backgroundColor;
 
         // info.event.setProp('backgroundColor', task.backgroundColor);
@@ -386,13 +387,27 @@ const controlTask = function (newTask) {
   // 1) Create task in model
   model.addTask(newTask);
 
-  // 2) Adaug in baza de date noul Task
-  model.persistTasks(model.stateTasks.tasks);
+  // 2) Render the task in the task list
+  const tasks = model.getTasksLocalStorage();
+  taskListView.render(tasks);
+};
 
-  // Afiseaza noul task in lista de taskuri --> ceva previewTask.update(
+const controlListTasks = function () {
+  // // 2) Update the stateTasks in model
+  model.stateTasks.tasks = model.getTasksLocalStorage();
+
+  taskListView.render(model.stateTasks.tasks);
+};
+
+const controlDeleteTask = function (taskId) {
+  model.deleteTask(taskId);
+
+  taskListView.render(model.stateTasks.tasks);
 };
 
 const init = function () {
+  taskListView.addHandlerRenderList(controlListTasks);
+  taskListView.addHandlerDeleteTask(controlDeleteTask);
   weatherView.addHandlerRenderWeather(controlWeather);
   controlQuotes();
   addTaskView.addHandlerNewTask(controlTask);

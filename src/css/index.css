@@ -492,11 +492,15 @@ main p{
 
 }
 
+/* New Task form */
+/* New Task form */
+/* New Task form */
+
 dialog {
     margin: auto;
     z-index: 10;
     border: solid 1px rgb(188, 188, 255);
-    width: 400px;
+    width: 440px;
     height: 400px;
     background-color: #efefef;
     border-radius: 4px;
@@ -506,6 +510,11 @@ dialog img {
     width: 24px;
     height: 24px;
 }
+
+
+/* dialog::backdrop {
+    background-color: rgba(126, 126, 126, 0.3);
+} */
 
 
 .close-header-form{
@@ -582,15 +591,18 @@ dialog img {
 
 .form-information{
     margin: 10px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8em;
 }
 
-.form-description{
+.form-description,.form-time,.form-category,.form-color{
     display: flex;
     gap: 1em;
 }
 
 
-textarea{
+.description-textarea{
     background-color: rgb(216, 216, 216);
     width: 100%;
     resize: none;
@@ -598,16 +610,32 @@ textarea{
     border-radius: 4px;
     transition: background-color 0.15s;
     border: none;
+    font-size: 1em;
 }
 
-textarea:focus{
+.description-textarea:focus{
     outline: none;
 }
 
-textarea:hover{
+.description-textarea:hover{
     background-color: rgb(198, 198, 198);
 }
 
-dialog::backdrop {
-    background-color: rgba(126, 126, 126, 0.3);
+
+
+.btn {
+    border: none;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+.create-task{
+    background-color: aqua;
+    cursor: pointer;
+    transition: 0.15 ease;
+
+}
+
+.create-task:hover{
+    background-color: rgb(0, 123, 123);
 }

@@ -5,16 +5,16 @@ class WeatherView extends View {
   _parentElement = document.querySelector('.weatherData-container');
   _data;
 
-  render(data) {
-    this._data = data; // data = model.state -> weather and weatherUnits objects
-    const markup = this._generateMarkup();
-    this._clear();
-    this._parentElement.insertAdjacentHTML('afterbegin', markup);
-  }
+  // render(data) {
+  //   this._data = data; // data = model.state -> weather and weatherUnits objects
+  //   const markup = this._generateMarkup();
+  //   this._clear();
+  //   this._parentElement.insertAdjacentHTML('afterbegin', markup);
+  // }
 
-  _clear() {
-    this._parentElement.innerHTML = '';
-  }
+  // _clear() {
+  //   this._parentElement.innerHTML = '';
+  // }
 
   renderLoading() {
     const markup = `

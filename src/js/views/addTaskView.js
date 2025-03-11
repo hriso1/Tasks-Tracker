@@ -46,11 +46,15 @@ class AddTaskView extends View {
   }
 
   addHandlerNewTask(handler) {
-    this._parentElement.addEventListener('submit', function (e) {
+    this._parentElement.addEventListener('submit', e => {
       e.preventDefault();
-      const dataArr = [...new Form(this)];
+      const dataArr = [...new FormData(this._parentElement)];
       const newTask = Object.fromEntries(dataArr);
       handler(newTask);
+
+      this._dialogElement.close();
+
+      // this.reset();
     });
   }
 }

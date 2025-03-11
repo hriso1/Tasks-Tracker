@@ -95,17 +95,51 @@ export const loadWeatherInformation = async function (latitude, longitude) {
 
 //////////////////////////////////////////////////////////// Adaug un nou task in tasks
 
-export const addTask = function (newTask) {
-  // Aici va fi un nod sau ceva de taskuri
-  // primesc newTask care e ceva nod nebunii vezi cum arata
-  // faci un array cu datele folosind Object.entries(newTask)
-  // Creez un obiect task cu o functie createTaskObject --> trb sa faci functia --> trebuia sa ii creez un id unic
-  // Ii dau push obiectului in tasks -> stateTasks.tasks.push(object)
-
-  // Salvez in baza de date cu o functie persistTasks
-  persistTasks();
+const createTaskObject = function (task) {
+  return {
+    activityCategory: task.activityCategory,
+    categoryColor: task.categoryColor,
+    date: task.date,
+    description: task.description,
+    end: task.end,
+    start: task.start,
+    title: task.title,
+    completed: false,
+    id: crypto.randomUUID(),
+  };
 };
 
-export const persistTasks = function (tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
+export const addTask = function (newTask) {
+  // 1) Update la state.Tasks
+  stateTasks.tasks = getTasksLocalStorage();
+
+  // 2) Creez un nou task
+  const task = createTaskObject(newTask);
+
+  // 3) I add the task in the stateTasks
+  stateTasks.tasks.push(task);
+
+  // 4) Save the tasks into the local storage
+  addTaskToLocalStorage();
+};
+
+export const getTasksLocalStorage = function () {
+  const tasks = localStorage.getItem('tasks2');
+  try {
+    return tasks ? JSON.parse(tasks) : []; // Ensure JSON parsing doesn't break
+  } catch (error) {
+    console.error('Error parsing localStorage data:', error);
+    localStorage.removeItem('tasks'); // Reset localStorage to prevent future errors
+    return [];
+  }
+};
+
+const addTaskToLocalStorage = function () {
+  localStorage.setItem('tasks2', JSON.stringify(stateTasks.tasks));
+};
+
+export const deleteTask = function (idTask) {
+  stateTasks.tasks = stateTasks.tasks.filter(task => task.id !== idTask);
+  console.log(stateTasks.tasks);
+  addTaskToLocalStorage();
 };
