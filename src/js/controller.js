@@ -366,6 +366,9 @@ function addCalendar(events) {
     });
 
     calendar.render();
+    let eventsCalendar = calendar.getEvents();
+    console.log('------------------------------');
+    console.log(eventsCalendar);
   });
 }
 
@@ -414,3 +417,25 @@ const init = function () {
 };
 
 init();
+
+let events = {
+  '12-03-2025': [
+    { title: 'test1', author: 'andrei' },
+    { title: 'test2', author: 'hriso' },
+  ],
+  '13-03-2025': [
+    { title: 'test3', author: 'andreii' },
+    { title: 'test4', author: 'hrisoo' },
+  ],
+};
+let event = {
+  date: '14-03-2025',
+  title: 'test5',
+  author: 'hrisoo',
+};
+
+let dateEvent = event.date;
+events[dateEvent]
+  ? events[dateEvent].push(event)
+  : (events[dateEvent] = [event]);
+console.log(events);
