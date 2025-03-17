@@ -1,5 +1,5 @@
 import View from './View.js';
-import deleteIcon from '../../img/deleteRed.png';
+import deleteIcon from '../../img/bin.png';
 
 class TaskListView extends View {
   _data;
@@ -28,7 +28,7 @@ class TaskListView extends View {
                     
                     <div>${task.title}</div>
                     <div>${task.activityCategory}</div>
-                    <button class="button-delete"><img src=${deleteIcon} description = 'deleteIcon' ></button>
+                    <button class="button-delete"><img src=${deleteIcon}  description = 'deleteIcon' ></button>
                   </div>
                 `
         )

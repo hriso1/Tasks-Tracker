@@ -5,6 +5,7 @@ import weatherView from './views/weatherView.js';
 import quotesView from './views/quotesView.js';
 import addTaskView from './views/addTaskView.js';
 import taskListView from './views/taskListView.js';
+import calendarView from './views/calendarView.js';
 
 import deleteIcon from '../img/deleteRed.png';
 
@@ -201,178 +202,178 @@ function saveEventsInLocalStorage(events) {
 }
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
-function newEventCalendar(idEvent, startEvent, endEvent) {
-  const tasks = getTasksFromLocalS();
-  const events = getEventsFromLocalStorage();
-  let event = {};
-  /// Creez o copie a taskului si ii schimb id-ul
-  tasks.forEach(function (task) {
-    if (task.id === idEvent) {
-      event = structuredClone(task);
-      event.id = crypto.randomUUID();
-      event.start = startEvent;
-      event.end = endEvent;
-    }
-  });
-  events.push(event);
-  saveEventsInLocalStorage(events);
-}
+// function newEventCalendar(idEvent, startEvent, endEvent) {
+//   const tasks = getTasksFromLocalS();
+//   const events = getEventsFromLocalStorage();
+//   let event = {};
+//   /// Creez o copie a taskului si ii schimb id-ul
+//   tasks.forEach(function (task) {
+//     if (task.id === idEvent) {
+//       event = structuredClone(task);
+//       event.id = crypto.randomUUID();
+//       event.start = startEvent;
+//       event.end = endEvent;
+//     }
+//   });
+//   events.push(event);
+//   saveEventsInLocalStorage(events);
+// }
 
 ////////////////////////////////////////////////////// Calendar
 
-function addCalendar(events) {
-  document.addEventListener('DOMContentLoaded', function () {
-    // const Calendar = FullCalendar.Calendar;
-    // const Draggable = FullCalendar.Draggable;
+// function addCalendar(events) {
+//   document.addEventListener('DOMContentLoaded', function () {
+//     // const Calendar = FullCalendar.Calendar;
+//     // const Draggable = FullCalendar.Draggable;
 
-    const calendarEl = document.getElementById('calendar');
+//     const calendarEl = document.getElementById('calendar');
 
-    var nowLocal = new Date();
-    var nowUTC = new Date(
-      nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000
-    );
+//     var nowLocal = new Date();
+//     var nowUTC = new Date(
+//       nowLocal.getTime() - nowLocal.getTimezoneOffset() * 60000
+//     );
 
-    /////////////////////////////// make tasks draggable
+//     /////////////////////////////// make tasks draggable
 
-    new Draggable(tasksList, {
-      itemSelector: '.task-container',
-      eventData: function (eventElement) {
-        return {
-          title: eventElement.innerText,
-        };
-      },
-    });
+//     new Draggable(tasksList, {
+//       itemSelector: '.task-container',
+//       eventData: function (eventElement) {
+//         return {
+//           title: eventElement.innerText,
+//         };
+//       },
+//     });
 
-    /////////////////////////////// initiate the calendar
+//     /////////////////////////////// initiate the calendar
 
-    let calendar = new Calendar(calendarEl, {
-      plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
-      timeZone: 'UTC',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: 'dayGridMonth,timeGridWeek,timeGridDay',
-      },
-      initialView: 'timeGridWeek',
-      editable: true,
-      eventStartEditable: true,
-      droppable: true,
-      nowIndicator: true,
-      now: nowUTC.toISOString(),
-      // contentHeight: 760,
-      // selectable: true,
-      titleFormat: {
-        month: 'long',
-        year: 'numeric',
-        day: 'numeric',
-        weekday: 'long',
-      },
-      eventContent: function (arg) {
-        // console.log('Arg este', arg);
+//     let calendar = new Calendar(calendarEl, {
+//       plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+//       timeZone: 'UTC',
+//       headerToolbar: {
+//         left: 'prev,next today',
+//         center: 'title',
+//         right: 'dayGridMonth,timeGridWeek,timeGridDay',
+//       },
+//       initialView: 'timeGridWeek',
+//       editable: true,
+//       eventStartEditable: true,
+//       droppable: true,
+//       nowIndicator: true,
+//       now: nowUTC.toISOString(),
+//       // contentHeight: 760,
+//       // selectable: true,
+//       titleFormat: {
+//         month: 'long',
+//         year: 'numeric',
+//         day: 'numeric',
+//         weekday: 'long',
+//       },
+//       eventContent: function (arg) {
+//         // console.log('Arg este', arg);
 
-        // Create time display
-        let eventTime = document.createElement('span');
-        eventTime.innerText = arg.timeText;
+//         // Create time display
+//         let eventTime = document.createElement('span');
+//         eventTime.innerText = arg.timeText;
 
-        // Create title
-        let eventTitle = document.createElement('span');
-        eventTitle.innerText = arg.event.title;
-        // Create button
-        let deleteButton = document.createElement('button');
-        deleteButton.classList.add('event-delete-button');
+//         // Create title
+//         let eventTitle = document.createElement('span');
+//         eventTitle.innerText = arg.event.title;
+//         // Create button
+//         let deleteButton = document.createElement('button');
+//         deleteButton.classList.add('event-delete-button');
 
-        let imgIcon = document.createElement('img');
-        imgIcon.src = `${deleteIcon}`;
-        imgIcon.alt = 'delete button';
-        imgIcon.width = 20;
-        imgIcon.height = 20;
+//         let imgIcon = document.createElement('img');
+//         imgIcon.src = `${deleteIcon}`;
+//         imgIcon.alt = 'delete button';
+//         imgIcon.width = 20;
+//         imgIcon.height = 20;
 
-        deleteButton.appendChild(imgIcon);
-        deleteButton.onclick = function () {
-          let events = getEventsFromLocalStorage();
-          let idEvent = arg.event._def.publicId;
-          events = events.filter(event => event.id !== idEvent);
-          saveEventsInLocalStorage(events);
-          arg.event.remove();
-        };
+//         deleteButton.appendChild(imgIcon);
+//         deleteButton.onclick = function () {
+//           let events = getEventsFromLocalStorage();
+//           let idEvent = arg.event._def.publicId;
+//           events = events.filter(event => event.id !== idEvent);
+//           saveEventsInLocalStorage(events);
+//           arg.event.remove();
+//         };
 
-        let eventContainer = document.createElement('div');
-        eventContainer.classList.add('event-container');
-        eventContainer.appendChild(eventTime);
-        eventContainer.appendChild(eventTitle);
-        eventContainer.appendChild(deleteButton);
-        eventContainer.style.backgroundColor = arg.backgroundColor;
+//         let eventContainer = document.createElement('div');
+//         eventContainer.classList.add('event-container');
+//         eventContainer.appendChild(eventTime);
+//         eventContainer.appendChild(eventTitle);
+//         eventContainer.appendChild(deleteButton);
+//         eventContainer.style.backgroundColor = arg.backgroundColor;
 
-        return { domNodes: [eventContainer] };
-      },
-      eventReceive: function (info) {
-        console.log(info);
-        const idEvent = info.draggedEl.dataset.id;
+//         return { domNodes: [eventContainer] };
+//       },
+//       eventReceive: function (info) {
+//         console.log(info);
+//         const idEvent = info.draggedEl.dataset.id;
 
-        // const tasks = model.getTasksLocalStorage();
-        const tasks = getTasksFromLocalS();
-        let task = tasks.filter(task => task.id === idEvent);
-        console.log(task);
-        // let color = task[0].categoryColor;
-        let color = task[0].backgroundColor;
+//         // const tasks = model.getTasksLocalStorage();
+//         const tasks = getTasksFromLocalS();
+//         let task = tasks.filter(task => task.id === idEvent);
+//         console.log(task);
+//         // let color = task[0].categoryColor;
+//         let color = task[0].backgroundColor;
 
-        // info.event.setProp('backgroundColor', task.backgroundColor);
-        info.event.setProp('backgroundColor', color);
-        info.event.setProp('textColor', 'black');
+//         // info.event.setProp('backgroundColor', task.backgroundColor);
+//         info.event.setProp('backgroundColor', color);
+//         info.event.setProp('textColor', 'black');
 
-        // get start and endEvent
-        const startEvent = info.event._instance.range.start;
-        let endEvent = info.event._instance.range.end;
-        console.log(startEvent);
-        console.log(endEvent);
+//         // get start and endEvent
+//         const startEvent = info.event._instance.range.start;
+//         let endEvent = info.event._instance.range.end;
+//         console.log(startEvent);
+//         console.log(endEvent);
 
-        if (info.event._context.viewApi.type === 'dayGridMonth') {
-          startEvent.setHours(8);
-          endEvent = new Date(startEvent);
-          endEvent.setHours(10);
-        }
-        console.log(startEvent);
-        console.log(endEvent);
+//         if (info.event._context.viewApi.type === 'dayGridMonth') {
+//           startEvent.setHours(8);
+//           endEvent = new Date(startEvent);
+//           endEvent.setHours(10);
+//         }
+//         console.log(startEvent);
+//         console.log(endEvent);
 
-        newEventCalendar(idEvent, startEvent, endEvent);
-      },
-      eventDrop: function (info) {
-        const idEventDrop = info.event._def.publicId;
-        let events = getEventsFromLocalStorage();
-        events.forEach(function (event) {
-          if (event.id === idEventDrop) {
-            event.start = info.event._instance.range.start;
-            event.end = info.event._instance.range.end;
-          }
-        });
-        saveEventsInLocalStorage(events);
-      },
-      eventResize: function (info) {
-        console.log(info.event._instance.range.end);
-        let events = getEventsFromLocalStorage();
-        const idElement = info.event._def.publicId;
-        events.forEach(event => {
-          if (event.id === idElement)
-            event.end = info.event._instance.range.end;
-        });
-        saveEventsInLocalStorage(events);
-      },
-      eventClick: function (info) {
-        /////////////////////// Trebuie sa creez un pop up in care sa editez evenimentul si cu un buton de sters
-        console.log(info);
-      },
+//         newEventCalendar(idEvent, startEvent, endEvent);
+//       },
+//       eventDrop: function (info) {
+//         const idEventDrop = info.event._def.publicId;
+//         let events = getEventsFromLocalStorage();
+//         events.forEach(function (event) {
+//           if (event.id === idEventDrop) {
+//             event.start = info.event._instance.range.start;
+//             event.end = info.event._instance.range.end;
+//           }
+//         });
+//         saveEventsInLocalStorage(events);
+//       },
+//       eventResize: function (info) {
+//         console.log(info.event._instance.range.end);
+//         let events = getEventsFromLocalStorage();
+//         const idElement = info.event._def.publicId;
+//         events.forEach(event => {
+//           if (event.id === idElement)
+//             event.end = info.event._instance.range.end;
+//         });
+//         saveEventsInLocalStorage(events);
+//       },
+//       eventClick: function (info) {
+//         /////////////////////// Trebuie sa creez un pop up in care sa editez evenimentul si cu un buton de sters
+//         console.log(info);
+//       },
 
-      events: events,
-    });
+//       events: events,
+//     });
 
-    calendar.render();
-    let eventsCalendar = calendar.getEvents();
-    console.log('------------------------------');
-    console.log(eventsCalendar);
-  });
-}
+//     calendar.render();
+//     let eventsCalendar = calendar.getEvents();
+//     console.log('------------------------------');
+//     console.log(eventsCalendar);
+//   });
+// }
 
-addCalendar(getEventsFromLocalStorage());
+// addCalendar(getEventsFromLocalStorage());
 
 // const dialogElement = document.querySelector('dialog');
 // const openDialogButton = document.querySelector('.open-form');
@@ -386,6 +387,12 @@ addCalendar(getEventsFromLocalStorage());
 //   dialogElement.close();
 // });
 
+const updateCalendar = function (calendar) {
+  calendar.addEvent(
+    model.stateTasks.events[model.stateTasks.events.length - 1]
+  );
+};
+
 const controlTask = function (newTask) {
   // 1) Create task in model
   model.addTask(newTask);
@@ -393,6 +400,10 @@ const controlTask = function (newTask) {
   // 2) Render the task in the task list
   const tasks = model.getTasksLocalStorage();
   taskListView.render(tasks);
+
+  // 3) Rerender the calendar with the newTask or create a newEvent
+  // Cumva the rerender la calendar sau schimba eventul nu stiu
+  if (model.stateTasks.events.length > 0) updateCalendar(calendarView.calendar);
 };
 
 const controlListTasks = function () {
@@ -403,39 +414,63 @@ const controlListTasks = function () {
 };
 
 const controlDeleteTask = function (taskId) {
+  // 1) Delete Task from model
   model.deleteTask(taskId);
 
+  // 2) Rerender the new list
   taskListView.render(model.stateTasks.tasks);
 };
 
+const controlCalendar = function (calendar) {
+  // 1) When the task is dragged into the calendar
+
+  calendar.setOption('eventReceive', function (info) {
+    model.receive(info);
+  });
+
+  calendar.setOption('eventDrop', function (info) {
+    model.drop(info);
+  });
+
+  calendar.setOption('eventResize', function (info) {
+    model.resize(info);
+  });
+
+  // calendar.setOption('eventContent', function (arg) {
+  //   model.eventContent(arg);
+  // });
+};
+
 const init = function () {
+  calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
+
   taskListView.addHandlerRenderList(controlListTasks);
   taskListView.addHandlerDeleteTask(controlDeleteTask);
   weatherView.addHandlerRenderWeather(controlWeather);
+
   controlQuotes();
   addTaskView.addHandlerNewTask(controlTask);
 };
 
 init();
+// let events = {
+//   '12-03-2025': [
+//     { title: 'test1', author: 'andrei' },
+//     { title: 'test2', author: 'hriso' },
+//   ],
+//   '13-03-2025': [
+//     { title: 'test3', author: 'andreii' },
+//     { title: 'test4', author: 'hrisoo' },
+//   ],
+// };
+// let event = {
+//   date: '14-03-2025',
+//   title: 'test5',
+//   author: 'hrisoo',
+// };
 
-let events = {
-  '12-03-2025': [
-    { title: 'test1', author: 'andrei' },
-    { title: 'test2', author: 'hriso' },
-  ],
-  '13-03-2025': [
-    { title: 'test3', author: 'andreii' },
-    { title: 'test4', author: 'hrisoo' },
-  ],
-};
-let event = {
-  date: '14-03-2025',
-  title: 'test5',
-  author: 'hrisoo',
-};
-
-let dateEvent = event.date;
-events[dateEvent]
-  ? events[dateEvent].push(event)
-  : (events[dateEvent] = [event]);
-console.log(events);
+// let dateEvent = event.date;
+// events[dateEvent]
+//   ? events[dateEvent].push(event)
+//   : (events[dateEvent] = [event]);
+// console.log(events);

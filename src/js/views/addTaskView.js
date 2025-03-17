@@ -54,7 +54,7 @@ class AddTaskView extends View {
 
       this._dialogElement.close();
 
-      // this.reset();
+      this._parentElement.reset();
     });
   }
 }
