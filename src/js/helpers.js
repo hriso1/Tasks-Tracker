@@ -167,3 +167,13 @@ export const motivationQuotes = [
   { quote: 'Don’t let perfect be the enemy of good.', author: 'Voltaire' },
   { quote: 'One day or day one. You decide.', author: 'Paulo Coelho' },
 ];
+
+export const extractDate = function (dateString) {
+  const date = new Date(dateString); // Convert to Date object
+
+  const year = date.getFullYear(); // Get full year (e.g., 2025)
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Get month (0-based, so +1)
+  const day = String(date.getDate()).padStart(2, '0'); // Get day of the month
+
+  return `${year}-${month}-${day}`;
+};

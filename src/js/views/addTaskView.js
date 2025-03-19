@@ -4,7 +4,7 @@ class AddTaskView extends View {
   _parentElement = document.querySelector('.form-new-task');
   _dialogElement = document.querySelector('.dialog-add-task');
   _openDialogButton = document.querySelector('.open-form');
-  _closeDialogButton = document.querySelector('.close-button-form');
+  _closeDialogButton = document.querySelector('.close-task');
 
   constructor() {
     super();
@@ -20,6 +20,10 @@ class AddTaskView extends View {
         this._dialogElement.showModal();
       }.bind(this)
     );
+  }
+
+  addHandlerShowDialog() {
+    this._dialogElement.showModal();
   }
 
   _addHandlerCloseDialog() {

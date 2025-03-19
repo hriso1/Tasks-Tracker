@@ -1,4 +1,4 @@
-import { weatherIcons } from './helpers.js';
+import { extractDate, weatherIcons } from './helpers.js';
 import { API_URL_WEATHER } from './config.js';
 import { getJSON } from './helpers.js';
 
@@ -161,7 +161,7 @@ const copyTask = function (task) {
 };
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
-function newEventCalendar(idEvent, startEvent, endEvent) {
+function newEventCalendar(idEvent, startEvent, endEvent, dateEvent) {
   stateTasks.tasks = getTasksLocalStorage();
   stateTasks.events = getEventsFromLocalStorage();
   let event = {};
@@ -172,6 +172,7 @@ function newEventCalendar(idEvent, startEvent, endEvent) {
       event.id = crypto.randomUUID();
       event.start = startEvent;
       event.end = endEvent;
+      event.date = dateEvent;
     }
   });
   stateTasks.events.push(event);
@@ -202,6 +203,7 @@ export const receive = function (info) {
   const idEvent = info.draggedEl.dataset.id;
   let startEvent = info.event._instance.range.start;
   let endEvent = info.event._instance.range.end;
+  let dateEvent = extractDate(info.event._instance.range.start);
 
   // Something temporar i want to put it in all day category
   if (info.event._context.viewApi.type === 'dayGridMonth') {
@@ -209,7 +211,7 @@ export const receive = function (info) {
     endEvent = new Date(startEvent);
     endEvent.setHours(10);
   }
-  newEventCalendar(idEvent, startEvent, endEvent);
+  newEventCalendar(idEvent, startEvent, endEvent, dateEvent);
 };
 
 export const drop = function (info) {
@@ -255,3 +257,9 @@ export const eventContent = function (arg) {
   eventContainer.style.backgroundColor = arg.backgroundColor;
   return { domNodes: [eventContainer] };
 };
+
+export const eventClick = function (info) {
+  console.log(info);
+};
+
+//!!!!!!!!!!!!!!!!!!1 Pune nume comun la butoane ca sa ai acleasi css

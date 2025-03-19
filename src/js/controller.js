@@ -6,14 +6,7 @@ import quotesView from './views/quotesView.js';
 import addTaskView from './views/addTaskView.js';
 import taskListView from './views/taskListView.js';
 import calendarView from './views/calendarView.js';
-
-import deleteIcon from '../img/deleteRed.png';
-
-import { Calendar } from '@fullcalendar/core';
-import dayGridPlugin from '@fullcalendar/daygrid';
-import timeGridPlugin from '@fullcalendar/timegrid';
-import listPlugin from '@fullcalendar/list';
-import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import editEventView from './views/editEventView.js';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -69,137 +62,252 @@ const controlQuotes = function () {
   quotesView.render();
 };
 
-const inputTasks = document.getElementById('input-tasks');
-const inputCategory = document.getElementById('input-categories');
-const selectedColour = document.getElementById('colours');
-// const addTaskButton = document.querySelector('.add-task-button');
-const tasksList = document.querySelector('.tasks-list');
-const form = document.querySelector('.newTask-container');
+const updateCalendar = function (calendar) {
+  calendar.addEvent(
+    model.stateTasks.events[model.stateTasks.events.length - 1]
+  );
+};
 
-//////////////////////////////////////////////////////// Ia tasks din localStorage
-function getTasksFromLocalS() {
-  const tasks = localStorage.getItem('tasks');
-  try {
-    return tasks ? JSON.parse(tasks) : []; // Ensure JSON parsing doesn't break
-  } catch (error) {
-    console.error('Error parsing localStorage data:', error);
-    localStorage.removeItem('tasks'); // Reset localStorage to prevent future errors
-    return [];
-  }
-}
-//////////////////////////////////////////////////////// Salveaza un task in localStorage
+const controlTask = function (newTask) {
+  // 1) Create task in model
+  model.addTask(newTask);
 
-function saveTaksInLocalS(tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-//////////////////////////////////////////////////////// Creates the taks object
-function getTaskDetails() {
-  return {
-    id: crypto.randomUUID(),
-    task: inputTasks.value,
-    title: inputTasks.value,
-    category: inputCategory.value,
-    backgroundColor: selectedColour.value,
-    completed: false,
-  };
-}
-//////////////////////////////////////////////////////// Clears the form values
+  // 2) Render the task in the task list
+  const tasks = model.getTasksLocalStorage();
+  taskListView.render(tasks);
 
-function clearForm() {
-  inputTasks.value = '';
-  inputCategory.value = '';
-  inputTasks.focus();
-}
-//////////////////////////////////////////////////////// Adauga taskul nou in LocalStorage
-function addTaskToLocalStorage(task) {
-  const tasks = getTasksFromLocalS();
-  tasks.push(task);
-  saveTaksInLocalS(tasks);
-}
+  // 3) Rerender the calendar with the newTask or create a newEvent
+  if (model.stateTasks.events.length > 0) updateCalendar(calendarView.calendar);
+};
 
-//////////////////////////////////////////////////////// Generate markup on display
+const controlEditTaskEvent = function (newTask) {};
 
-form.addEventListener('submit', function (e) {
-  e.preventDefault();
-  const newTask = getTaskDetails();
-  addTaskToLocalStorage(newTask);
+const controlListTasks = function () {
+  // // 2) Update the stateTasks in model
+  model.stateTasks.tasks = model.getTasksLocalStorage();
 
-  // Re-render tasks
-  renderTasks();
+  taskListView.render(model.stateTasks.tasks);
+};
 
-  clearForm();
-});
+const controlDeleteTask = function (taskId) {
+  // 1) Delete Task from model
+  model.deleteTask(taskId);
 
-window.addEventListener('load', renderTasks);
+  // 2) Rerender the new list
+  taskListView.render(model.stateTasks.tasks);
+};
 
-function renderTasks() {
-  const tasksLocalStorage = getTasksFromLocalS();
-  tasksList.innerHTML = tasksLocalStorage
-    .map(
-      task => `
-      <div class="task-container" data-id="${
-        task.id
-      }" style="background-color: ${task.backgroundColor}" draggable='true' >
-        <input class='check-input' type='checkbox' ${
-          task.completed ? 'checked' : ''
-        }  >
-        <div>${task.task}</div>
-        <div>${task.category}</div>
-        <button class="button-delete"><img src=${deleteIcon} description = 'deleteIcon' ></button>
-      </div>
-    `
-    )
-    .join('');
-}
+const controlCalendar = function (calendar) {
+  // 1) When the task is dragged into the calendar
 
-//////////////////////////// Event delegation for checked task and delete task
+  calendar.setOption('eventReceive', function (info) {
+    model.receive(info);
+    info.event.remove();
+    updateCalendar(calendarView.calendar);
+  });
 
-tasksList.addEventListener('click', function (event) {
-  const targetedTask = event.target.closest('.task-container');
-  if (!targetedTask) return; // If no task container is found, exit
+  calendar.setOption('eventDrop', function (info) {
+    model.drop(info);
+  });
 
-  const taskId = targetedTask.getAttribute('data-id');
-  let tasks = getTasksFromLocalS();
+  calendar.setOption('eventResize', function (info) {
+    model.resize(info);
+  });
 
-  handleCheckBox(event, tasks, taskId);
-  handleDeleteTask(event, tasks, taskId, targetedTask);
-});
+  calendar.setOption('eventClick', function (info) {
+    const eventId = info.event.id;
 
-function handleCheckBox(event, tasks, taskId) {
-  if (event.target.classList.contains('check-input')) {
-    const task = tasks.find(task => task.id === taskId);
-    if (!task) {
-      return;
-    }
-    task.completed = !task.completed;
-    saveTaksInLocalS(tasks);
-  }
-}
+    const eventData = model
+      .getEventsFromLocalStorage()
+      .filter(e => e.id === eventId);
 
-function handleDeleteTask(event, tasks, taskId, targetedTask) {
-  if (event.target.closest('.button-delete')) {
-    tasks = tasks.filter(task => task.id !== taskId);
-    saveTaksInLocalS(tasks);
-    targetedTask.remove(); // Remove task from UI
-  }
-}
+    editEventView.addHandlerShowDialog(eventData[0]);
+  });
 
-////////////////////////////////////////////////// Gets all the events of the calendar from local storage
-function getEventsFromLocalStorage() {
-  const events = localStorage.getItem('events');
-  try {
-    return events ? JSON.parse(events) : [];
-  } catch (error) {
-    console.error("Can't get events from local storage");
-    localStorage.removeItem('events');
-    return [];
-  }
-}
+  calendar.setOption('dateClick', function (info) {
+    console.log(info);
+    addTaskView.addHandlerShowDialog();
+  });
 
-/////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
-function saveEventsInLocalStorage(events) {
-  localStorage.setItem('events', JSON.stringify(events));
-}
+  // calendar.setOption('eventContent', function (arg) {
+  //   model.eventContent(arg);
+  // });
+};
+
+const init = function () {
+  // 1) Listen to add new task
+  addTaskView.addHandlerNewTask(controlTask);
+
+  // 2) Edit an event
+  editEventView.addHandlerEditTaskEvent(controlEditTaskEvent);
+
+  // 3) Create new calendar with events
+  calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
+
+  taskListView.addHandlerRenderList(controlListTasks);
+  taskListView.addHandlerDeleteTask(controlDeleteTask);
+
+  // Renders the weather panel
+  weatherView.addHandlerRenderWeather(controlWeather);
+
+  // Renders the quotes panel
+  controlQuotes();
+};
+
+init();
+// let events = {
+//   '12-03-2025': [
+//     { title: 'test1', author: 'andrei' },
+//     { title: 'test2', author: 'hriso' },
+//   ],
+//   '13-03-2025': [
+//     { title: 'test3', author: 'andreii' },
+//     { title: 'test4', author: 'hrisoo' },
+//   ],
+// };
+// let event = {
+//   date: '14-03-2025',
+//   title: 'test5',
+//   author: 'hrisoo',
+// };
+
+// let dateEvent = event.date;
+// events[dateEvent]
+//   ? events[dateEvent].push(event)
+//   : (events[dateEvent] = [event]);
+// console.log(events);
+
+// const inputTasks = document.getElementById('input-tasks');
+// const inputCategory = document.getElementById('input-categories');
+// const selectedColour = document.getElementById('colours');
+// // const addTaskButton = document.querySelector('.add-task-button');
+// const tasksList = document.querySelector('.tasks-list');
+// const form = document.querySelector('.newTask-container');
+
+// //////////////////////////////////////////////////////// Ia tasks din localStorage
+// function getTasksFromLocalS() {
+//   const tasks = localStorage.getItem('tasks');
+//   try {
+//     return tasks ? JSON.parse(tasks) : []; // Ensure JSON parsing doesn't break
+//   } catch (error) {
+//     console.error('Error parsing localStorage data:', error);
+//     localStorage.removeItem('tasks'); // Reset localStorage to prevent future errors
+//     return [];
+//   }
+// }
+// //////////////////////////////////////////////////////// Salveaza un task in localStorage
+
+// function saveTaksInLocalS(tasks) {
+//   localStorage.setItem('tasks', JSON.stringify(tasks));
+// }
+// //////////////////////////////////////////////////////// Creates the taks object
+// function getTaskDetails() {
+//   return {
+//     id: crypto.randomUUID(),
+//     task: inputTasks.value,
+//     title: inputTasks.value,
+//     category: inputCategory.value,
+//     backgroundColor: selectedColour.value,
+//     completed: false,
+//   };
+// }
+// //////////////////////////////////////////////////////// Clears the form values
+
+// function clearForm() {
+//   inputTasks.value = '';
+//   inputCategory.value = '';
+//   inputTasks.focus();
+// }
+// //////////////////////////////////////////////////////// Adauga taskul nou in LocalStorage
+// function addTaskToLocalStorage(task) {
+//   const tasks = getTasksFromLocalS();
+//   tasks.push(task);
+//   saveTaksInLocalS(tasks);
+// }
+
+// //////////////////////////////////////////////////////// Generate markup on display
+
+// form.addEventListener('submit', function (e) {
+//   e.preventDefault();
+//   const newTask = getTaskDetails();
+//   addTaskToLocalStorage(newTask);
+
+//   // Re-render tasks
+//   renderTasks();
+
+//   clearForm();
+// });
+
+// window.addEventListener('load', renderTasks);
+
+// function renderTasks() {
+//   const tasksLocalStorage = getTasksFromLocalS();
+//   tasksList.innerHTML = tasksLocalStorage
+//     .map(
+//       task => `
+//       <div class="task-container" data-id="${
+//         task.id
+//       }" style="background-color: ${task.backgroundColor}" draggable='true' >
+//         <input class='check-input' type='checkbox' ${
+//           task.completed ? 'checked' : ''
+//         }  >
+//         <div>${task.task}</div>
+//         <div>${task.category}</div>
+//         <button class="button-delete"><img src=${deleteIcon} description = 'deleteIcon' ></button>
+//       </div>
+//     `
+//     )
+//     .join('');
+// }
+
+// //////////////////////////// Event delegation for checked task and delete task
+
+// tasksList.addEventListener('click', function (event) {
+//   const targetedTask = event.target.closest('.task-container');
+//   if (!targetedTask) return; // If no task container is found, exit
+
+//   const taskId = targetedTask.getAttribute('data-id');
+//   let tasks = getTasksFromLocalS();
+
+//   handleCheckBox(event, tasks, taskId);
+//   handleDeleteTask(event, tasks, taskId, targetedTask);
+// });
+
+// function handleCheckBox(event, tasks, taskId) {
+//   if (event.target.classList.contains('check-input')) {
+//     const task = tasks.find(task => task.id === taskId);
+//     if (!task) {
+//       return;
+//     }
+//     task.completed = !task.completed;
+//     saveTaksInLocalS(tasks);
+//   }
+// }
+
+// function handleDeleteTask(event, tasks, taskId, targetedTask) {
+//   if (event.target.closest('.button-delete')) {
+//     tasks = tasks.filter(task => task.id !== taskId);
+//     saveTaksInLocalS(tasks);
+//     targetedTask.remove(); // Remove task from UI
+//   }
+// }
+
+// ////////////////////////////////////////////////// Gets all the events of the calendar from local storage
+// function getEventsFromLocalStorage() {
+//   const events = localStorage.getItem('events');
+//   try {
+//     return events ? JSON.parse(events) : [];
+//   } catch (error) {
+//     console.error("Can't get events from local storage");
+//     localStorage.removeItem('events');
+//     return [];
+//   }
+// }
+
+// /////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
+// function saveEventsInLocalStorage(events) {
+//   localStorage.setItem('events', JSON.stringify(events));
+// }
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
 // function newEventCalendar(idEvent, startEvent, endEvent) {
@@ -386,91 +494,3 @@ function saveEventsInLocalStorage(events) {
 // closeDialogButton.addEventListener('click', function () {
 //   dialogElement.close();
 // });
-
-const updateCalendar = function (calendar) {
-  calendar.addEvent(
-    model.stateTasks.events[model.stateTasks.events.length - 1]
-  );
-};
-
-const controlTask = function (newTask) {
-  // 1) Create task in model
-  model.addTask(newTask);
-
-  // 2) Render the task in the task list
-  const tasks = model.getTasksLocalStorage();
-  taskListView.render(tasks);
-
-  // 3) Rerender the calendar with the newTask or create a newEvent
-  // Cumva the rerender la calendar sau schimba eventul nu stiu
-  if (model.stateTasks.events.length > 0) updateCalendar(calendarView.calendar);
-};
-
-const controlListTasks = function () {
-  // // 2) Update the stateTasks in model
-  model.stateTasks.tasks = model.getTasksLocalStorage();
-
-  taskListView.render(model.stateTasks.tasks);
-};
-
-const controlDeleteTask = function (taskId) {
-  // 1) Delete Task from model
-  model.deleteTask(taskId);
-
-  // 2) Rerender the new list
-  taskListView.render(model.stateTasks.tasks);
-};
-
-const controlCalendar = function (calendar) {
-  // 1) When the task is dragged into the calendar
-
-  calendar.setOption('eventReceive', function (info) {
-    model.receive(info);
-  });
-
-  calendar.setOption('eventDrop', function (info) {
-    model.drop(info);
-  });
-
-  calendar.setOption('eventResize', function (info) {
-    model.resize(info);
-  });
-
-  // calendar.setOption('eventContent', function (arg) {
-  //   model.eventContent(arg);
-  // });
-};
-
-const init = function () {
-  calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
-
-  taskListView.addHandlerRenderList(controlListTasks);
-  taskListView.addHandlerDeleteTask(controlDeleteTask);
-  weatherView.addHandlerRenderWeather(controlWeather);
-
-  controlQuotes();
-  addTaskView.addHandlerNewTask(controlTask);
-};
-
-init();
-// let events = {
-//   '12-03-2025': [
-//     { title: 'test1', author: 'andrei' },
-//     { title: 'test2', author: 'hriso' },
-//   ],
-//   '13-03-2025': [
-//     { title: 'test3', author: 'andreii' },
-//     { title: 'test4', author: 'hrisoo' },
-//   ],
-// };
-// let event = {
-//   date: '14-03-2025',
-//   title: 'test5',
-//   author: 'hrisoo',
-// };
-
-// let dateEvent = event.date;
-// events[dateEvent]
-//   ? events[dateEvent].push(event)
-//   : (events[dateEvent] = [event]);
-// console.log(events);

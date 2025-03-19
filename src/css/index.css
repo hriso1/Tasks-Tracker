@@ -549,24 +549,24 @@ dialog img {
 }
 
 
-.close-button-form{
+.close-form{
     all:unset;
     height: inherit;
     transition: 0.15s ;
 }
 
 
-.draggable-header-form:hover +.close-button-form {
+.draggable-header-form:hover +.close-form {
     background-color: rgba(184, 184, 184, 0.568);
     
 }
 
-.close-button-form{
+.close-form{
     transition: 0.15s ;
     padding-right: 10px;
 }
 
-.close-button-form img:hover {
+.close-form img:hover {
     background-color: #b9b9b9;
     border-radius: 12px;
     cursor: pointer;
