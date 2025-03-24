@@ -7,6 +7,7 @@ import addTaskView from './views/addTaskView.js';
 import taskListView from './views/taskListView.js';
 import calendarView from './views/calendarView.js';
 import editEventView from './views/editEventView.js';
+import { hoursConstraint } from './helpers.js';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -57,16 +58,24 @@ const controlWeather = async function () {
     console.error(error);
   }
 };
+///////////////////////////////////////////////////////////////////////////////
 
 const controlQuotes = function () {
   quotesView.render();
 };
+///////////////////////////////////////////////////////////////////////////////
 
 const updateCalendar = function (calendar) {
   calendar.addEvent(
     model.stateTasks.events[model.stateTasks.events.length - 1]
   );
 };
+
+const rerenderCalendar = function (calendar) {
+  calendar.removeAllEvents();
+  calendar.addEventSource(model.stateTasks.events);
+};
+///////////////////////////////////////////////////////////////////////////////
 
 const controlTask = function (newTask) {
   // 1) Create task in model
@@ -80,7 +89,17 @@ const controlTask = function (newTask) {
   if (model.stateTasks.events.length > 0) updateCalendar(calendarView.calendar);
 };
 
-const controlEditTaskEvent = function (newTask) {};
+const controlEditEvent = function (newEvent) {
+  // Delete old event
+  model.deleteEvent();
+
+  // Create new event
+  model.addEvent(newEvent);
+
+  // Rerender calendar with the new event
+  rerenderCalendar(calendarView.calendar);
+};
+///////////////////////////////////////////////////////////////////////////////
 
 const controlListTasks = function () {
   // // 2) Update the stateTasks in model
@@ -89,6 +108,7 @@ const controlListTasks = function () {
   taskListView.render(model.stateTasks.tasks);
 };
 
+///////////////////////////////////////////////////////////////////////////////
 const controlDeleteTask = function (taskId) {
   // 1) Delete Task from model
   model.deleteTask(taskId);
@@ -97,6 +117,19 @@ const controlDeleteTask = function (taskId) {
   taskListView.render(model.stateTasks.tasks);
 };
 
+///////////////////////////////////////////////////////////////////////////////
+const controlDeleteEvent = function () {
+  // 1) Delete the event
+  model.deleteEvent();
+
+  // 2) Render new calendar
+  rerenderCalendar(calendarView.calendar);
+
+  // 3) Close edit form
+  editEventView._addHandlerCloseDialog();
+};
+
+//////////////////////////////////////////////////////////////////////////////////
 const controlCalendar = function (calendar) {
   // 1) When the task is dragged into the calendar
 
@@ -106,8 +139,24 @@ const controlCalendar = function (calendar) {
     updateCalendar(calendarView.calendar);
   });
 
+  hoursConstraint(calendar, '00:00:00', '23:59:00');
+
   calendar.setOption('eventDrop', function (info) {
     model.drop(info);
+    rerenderCalendar(calendarView.calendar);
+
+    hoursConstraint(calendar, '00:00:00', '23:59:00');
+    // calendar.setOption('eventConstraint', {
+    //   startTime: '00:00:00', // Earliest time allowed
+    //   endTime: '23:59:00', // Latest time allowed
+    // });
+  });
+
+  hoursConstraint(calendar, '00:00:00', '23:59:00');
+
+  calendar.setOption('eventDragStart', function () {
+    // Dezactivează constrângerile când începe mutarea
+    calendar.setOption('eventConstraint', null);
   });
 
   calendar.setOption('eventResize', function (info) {
@@ -116,16 +165,16 @@ const controlCalendar = function (calendar) {
 
   calendar.setOption('eventClick', function (info) {
     const eventId = info.event.id;
+    model.storeIdEvent(eventId);
 
+    // Gets the data inside an object that is in an array
     const eventData = model
       .getEventsFromLocalStorage()
       .filter(e => e.id === eventId);
-
-    editEventView.addHandlerShowDialog(eventData[0]);
+    editEventView.addHandlerShowDialog(eventData[0]); // get the object of the array
   });
 
   calendar.setOption('dateClick', function (info) {
-    console.log(info);
     addTaskView.addHandlerShowDialog();
   });
 
@@ -135,26 +184,36 @@ const controlCalendar = function (calendar) {
 };
 
 const init = function () {
+  // 0) Populate the model with data
+  model.getStateTasks();
+
   // 1) Listen to add new task
   addTaskView.addHandlerNewTask(controlTask);
 
   // 2) Edit an event
-  editEventView.addHandlerEditTaskEvent(controlEditTaskEvent);
+  editEventView.addHandlerEditTaskEvent(controlEditEvent);
+
+  // 2.1) Listen for delete event
+  editEventView.addHandlerDeleteEvent(controlDeleteEvent);
 
   // 3) Create new calendar with events
   calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
 
+  // 4) Render the list with task
   taskListView.addHandlerRenderList(controlListTasks);
+
+  // 5) Event listener to delete a task from list
   taskListView.addHandlerDeleteTask(controlDeleteTask);
 
-  // Renders the weather panel
+  // 6) Renders the weather panel
   weatherView.addHandlerRenderWeather(controlWeather);
 
-  // Renders the quotes panel
+  // 7) Renders the quotes panel
   controlQuotes();
 };
 
 init();
+
 // let events = {
 //   '12-03-2025': [
 //     { title: 'test1', author: 'andrei' },

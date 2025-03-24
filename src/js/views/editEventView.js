@@ -4,6 +4,7 @@ class EditEventView extends View {
   _parentElement = document.querySelector('.form-edit-event');
   _dialogElement = document.querySelector('.dialog-edit-event');
   _closeDialogButton = document.querySelector('.close-event');
+  _deleteEventButton = document.querySelector('.delete-event');
   _input = document.querySelector('.input-event');
   constructor() {
     super();
@@ -13,7 +14,6 @@ class EditEventView extends View {
 
   _extractTime(dateString) {
     const date = new Date(dateString); // Convert string to Date object
-    console.log(date);
 
     // Extract hours, minutes, and seconds with leading zeros
     const hours = String(date.getHours() - 2).padStart(2, '0');
@@ -41,17 +41,27 @@ class EditEventView extends View {
       eventData.activityCategory || '';
     this._parentElement.querySelector("[name='categoryColor']").value =
       eventData.categoryColor || '';
-
     this._dialogElement.showModal();
   }
 
+  // _addHandlerCloseDialog() {
+  //   this._closeDialogButton.addEventListener(
+  //     'click',
+  //     function () {
+  //       this._dialogElement.close();
+  //     }.bind(this)
+  //   );
+  // }
+
   _addHandlerCloseDialog() {
-    this._closeDialogButton.addEventListener(
-      'click',
-      function () {
-        this._dialogElement.close();
-      }.bind(this)
-    );
+    [this._closeDialogButton, this._deleteEventButton].forEach(element => {
+      element.addEventListener(
+        'click',
+        function () {
+          this._dialogElement.close();
+        }.bind(this)
+      );
+    });
   }
 
   _addHandlerClickOutside() {
@@ -69,6 +79,10 @@ class EditEventView extends View {
   }
 
   // Used in controller to use the handler function
+
+  addHandlerDeleteEvent(handler) {
+    this._deleteEventButton.addEventListener('click', handler);
+  }
 
   addHandlerEditTaskEvent(handler) {
     this._parentElement.addEventListener('submit', e => {

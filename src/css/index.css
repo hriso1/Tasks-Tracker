@@ -556,6 +556,8 @@ dialog img {
 }
 
 
+
+
 .draggable-header-form:hover +.close-form {
     background-color: rgba(184, 184, 184, 0.568);
     
@@ -628,8 +630,6 @@ dialog img {
     background-color: rgb(198, 198, 198);
 }
 
-
-
 .btn {
     border: none;
     padding: 6px;
@@ -646,3 +646,24 @@ dialog img {
 .create-task:hover{
     background-color: rgb(0, 123, 123);
 }
+
+
+/* Calendar */
+
+.fc-daygrid-day-frame, .fc-scrollgrid-sync-inner, .fc-scroller ,.fc-scroller-liquid-absolute:hover{
+    cursor: pointer !important ;
+
+}
+
+/* .fc-event {
+    padding: 2px; 
+  } */
+  
+  /* .fc-event[style*="height: 20px"],
+  .fc-event[style*="height: 25px"],
+  .fc-event[style*="height: 30px"] {
+    padding: 0px; 
+    font-size: 10px; 
+ 
+  } */
+

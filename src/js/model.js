@@ -12,6 +12,7 @@ export const state = {
 export const stateTasks = {
   tasks: [],
   events: [],
+  idDeleteEvent: [],
 };
 
 const createWeatherObject = function (data) {
@@ -112,9 +113,34 @@ const createTaskObject = function (task) {
   };
 };
 
-export const addTask = function (newTask) {
-  // 1) Update la state.Tasks
+const createEventObject = function (event) {
+  let start = event.start.substring(0, 5);
+  let end = event.end.substring(0, 5);
+
+  start = event.date + 'T' + start + ':00.000Z';
+  end = event.date + 'T' + end + ':00.000Z';
+  return {
+    activityCategory: event.activityCategory,
+    categoryColor: event.categoryColor,
+    date: event.date,
+    description: event.description,
+    end: end,
+    start: start,
+    title: event.title,
+    completed: false,
+    id: crypto.randomUUID(),
+  };
+};
+
+export const getStateTasks = function () {
   stateTasks.tasks = getTasksLocalStorage();
+  stateTasks.events = getEventsFromLocalStorage();
+};
+
+export const addTask = function (newTask) {
+  // // 1) Update stateTasks
+  // stateTasks.tasks = getTasksLocalStorage();
+  console.log(newTask);
 
   // 2) Creez un nou task
   const task = createTaskObject(newTask);
@@ -127,6 +153,19 @@ export const addTask = function (newTask) {
 
   // 5) newTask has dates then create event
   newTask.end && newTask.start && newTask.date && copyTask(task);
+};
+
+export const addEvent = function (newEvent) {
+  console.log(newEvent);
+  // 1) Create new event
+  const event = createEventObject(newEvent);
+  console.log(event);
+  // 2) Add event in stateTasks.events
+  stateTasks.events.push(event);
+  console.log(stateTasks.events);
+
+  // 3) Save evenets in localStorage
+  saveEventsInLocalStorage(stateTasks.events);
 };
 
 export const getTasksLocalStorage = function () {
@@ -148,6 +187,27 @@ export const deleteTask = function (idTask) {
   stateTasks.tasks = stateTasks.tasks.filter(task => task.id !== idTask);
   addTaskToLocalStorage();
 };
+
+/////////////////////////////////////////////////// delete an event with a specific id
+export const deleteEvent = function () {
+  console.log(stateTasks.idDeleteEvent);
+  stateTasks.events = stateTasks.events.filter(
+    event => event.id !== stateTasks.idDeleteEvent[0]
+  );
+  console.log(stateTasks.events);
+  saveEventsInLocalStorage();
+  console.log(getEventsFromLocalStorage());
+};
+
+// Store the id of the element that MAY BE edited/deleted
+export const storeIdEvent = function (idEvent) {
+  if (stateTasks.idDeleteEvent.length === 0) {
+    stateTasks.idDeleteEvent.push(idEvent);
+  } else {
+    stateTasks.idDeleteEvent.pop();
+    stateTasks.idDeleteEvent.push(idEvent);
+  }
+};
 /////////////////////////////////////////////////// copy a task
 
 const copyTask = function (task) {
@@ -156,12 +216,11 @@ const copyTask = function (task) {
   event = structuredClone(task);
   event.id = crypto.randomUUID();
   stateTasks.events.push(event);
-  console.log(stateTasks.events);
   saveEventsInLocalStorage(stateTasks.events);
 };
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
-function newEventCalendar(idEvent, startEvent, endEvent, dateEvent) {
+function newEventCalendar(idEvent, startEvent, endEvent, dateEvent, allDay) {
   stateTasks.tasks = getTasksLocalStorage();
   stateTasks.events = getEventsFromLocalStorage();
   let event = {};
@@ -173,6 +232,7 @@ function newEventCalendar(idEvent, startEvent, endEvent, dateEvent) {
       event.start = startEvent;
       event.end = endEvent;
       event.date = dateEvent;
+      event.allDay = allDay;
     }
   });
   stateTasks.events.push(event);
@@ -192,7 +252,7 @@ export function getEventsFromLocalStorage() {
 }
 
 /////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
-function saveEventsInLocalStorage(events) {
+function saveEventsInLocalStorage(events = stateTasks.events) {
   localStorage.setItem('events2', JSON.stringify(events));
 }
 
@@ -211,16 +271,20 @@ export const receive = function (info) {
     endEvent = new Date(startEvent);
     endEvent.setHours(10);
   }
-  newEventCalendar(idEvent, startEvent, endEvent, dateEvent);
+  newEventCalendar(idEvent, startEvent, endEvent, dateEvent, info.event.allDay);
 };
 
 export const drop = function (info) {
   const idEventDrop = info.event._def.publicId;
+  console.log(info.event.allDay);
+
   stateTasks.events = getEventsFromLocalStorage();
   stateTasks.events.forEach(function (event) {
     if (event.id === idEventDrop) {
       event.start = info.event._instance.range.start;
       event.end = info.event._instance.range.end;
+      event.date = extractDate(info.event._instance.range.start);
+      event.allDay = info.event.allDay;
     }
   });
   saveEventsInLocalStorage(stateTasks.events);

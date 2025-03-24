@@ -177,3 +177,10 @@ export const extractDate = function (dateString) {
 
   return `${year}-${month}-${day}`;
 };
+
+export const hoursConstraint = function (calendar, startTime, endTime) {
+  calendar.setOption('eventConstraint', {
+    startTime: startTime, // Earliest time allowed
+    endTime: endTime, // Latest time allowed
+  });
+};
