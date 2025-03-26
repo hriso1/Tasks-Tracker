@@ -348,6 +348,10 @@ main{
     background-color: none;
 }
 
+.task-container:hover{
+    cursor: pointer;
+}
+
 .event-container{
     overflow: hidden;
     color:#11121a;
@@ -539,10 +543,10 @@ dialog img {
 }
 
 .draggable-header-form {
-
     flex: 1;
     transition: 0.15s ;
 }
+
 .draggable-header-form:hover{
     background-color: rgba(184, 184, 184, 0.568);
     cursor:move;
@@ -556,9 +560,7 @@ dialog img {
 }
 
 
-
-
-.draggable-header-form:hover +.close-form {
+.draggable-header-form:hover ~.close-form {
     background-color: rgba(184, 184, 184, 0.568);
     
 }

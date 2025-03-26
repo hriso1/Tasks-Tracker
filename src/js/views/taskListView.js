@@ -14,8 +14,11 @@ class TaskListView extends View {
       const targetedTask = event.target.closest('.task-container');
       if (!targetedTask) return;
 
-      const taskId = targetedTask.getAttribute('data-id');
-      if (event.target.closest('.button-delete')) handler(taskId);
+      if (event.target.closest('.button-delete')) {
+        event.stopPropagation();
+        const taskId = targetedTask.getAttribute('data-id');
+        handler(taskId);
+      }
     });
   }
 
@@ -42,6 +45,18 @@ class TaskListView extends View {
 <button class="button-delete"><img src=${deleteIcon}  description = 'deleteIcon' ></button>
             </div>
     `;
+  }
+
+  handlerShowTask(handler) {
+    this._parentElement.addEventListener('click', function (event) {
+      if (event.target.closest('.button-delete')) return;
+
+      const targetTask = event.target.closest('.task-container');
+      if (!targetTask) return;
+
+      const idTask = targetTask.getAttribute('data-id');
+      handler(idTask);
+    });
   }
 }
 

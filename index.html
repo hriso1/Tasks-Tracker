@@ -80,7 +80,6 @@
             </form> -->
             <button class="open-form" >Open form</button>
 
-
             <dialog class="dialog-add-task" >
                 <div class="close-header-form" >
                     <div class="draggable-header-form" ></div>
@@ -122,9 +121,45 @@
                     </div>
                     <button class="btn create-task" >Create task</button>
                 </form>
-
-                
             </dialog>
+
+            <dialog class="dialog-edit-task" >
+                <div class="close-header-form" >
+                    <div class="draggable-header-form" ></div>
+                    <button class="close-form delete-edit-task " >
+                        <img src="./src/img/delete.png"   >
+                    </button>
+                    <button class="close-form close-edit-task " >
+                        <img src="./src/img/cross.png"   >
+                    </button>
+                </div>
+            <form class="form-edit-task">
+                <div class="input-title-form" >
+                    <input type="text" placeholder="Title" name="title" required >
+                </div>
+                <div class="form-information" >
+                    <div class="form-description" >
+                        <img src="./src/img/job-description.png" alt="" class="form-icon">
+                        <textarea name="description" class="description-textarea">descriere</textarea>
+                    </div>
+                    <div class="form-category">
+                        <img src="./src/img/categories.png" alt="activity category" >
+                        <input list = 'category-options' name="activityCategory" >
+                        <datalist id="category-options" placeholder="task category" >
+                            <option value="Important" ></option>
+                            <option value="Job" ></option>
+                            <option value="Gym" ></option>
+                        </datalist>
+                    </div>
+                    <div class="form-color">
+                        <img src="./src/img/paint.png" alt="color category"  >
+                        <div style="font-size: 0.8em;" >category color</div>
+                        <input type="color" name="categoryColor" value="#ff00ff" >
+                    </div>
+                </div>
+                <button class="btn edit-task" >Edit task</button>
+            </form>
+        </dialog>
 
             <dialog class="dialog-edit-event" >
                 <div class="close-header-form" >

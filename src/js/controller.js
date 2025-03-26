@@ -8,6 +8,7 @@ import taskListView from './views/taskListView.js';
 import calendarView from './views/calendarView.js';
 import editEventView from './views/editEventView.js';
 import { hoursConstraint } from './helpers.js';
+import editTaskView from './views/editTaskView.js';
 
 const toggleButton = document.getElementById('toggle-btn');
 const sidebar = document.getElementById('sidebar');
@@ -65,11 +66,11 @@ const controlQuotes = function () {
 };
 ///////////////////////////////////////////////////////////////////////////////
 
-const updateCalendar = function (calendar) {
-  calendar.addEvent(
-    model.stateTasks.events[model.stateTasks.events.length - 1]
-  );
-};
+// const updateCalendar = function (calendar) {
+//   calendar.addEvent(
+//     model.stateTasks.events[model.stateTasks.events.length - 1]
+//   );
+// };
 
 const rerenderCalendar = function (calendar) {
   calendar.removeAllEvents();
@@ -82,13 +83,14 @@ const controlTask = function (newTask) {
   model.addTask(newTask);
 
   // 2) Render the task in the task list
-  const tasks = model.getTasksLocalStorage();
+  const tasks = model.stateTasks.tasks;
   taskListView.render(tasks);
 
   // 3) Rerender the calendar with the newTask or create a newEvent
-  if (model.stateTasks.events.length > 0) updateCalendar(calendarView.calendar);
+  rerenderCalendar(calendarView.calendar);
 };
 
+//////////////////////////////////////////////////////////////////////////////
 const controlEditEvent = function (newEvent) {
   // Delete old event
   model.deleteEvent();
@@ -99,6 +101,30 @@ const controlEditEvent = function (newEvent) {
   // Rerender calendar with the new event
   rerenderCalendar(calendarView.calendar);
 };
+///////////////////////////////////////////////////////////////////////////////
+
+const getIdTask = function (idTask) {
+  // 0) Store idTask in model
+  model.storeIdTask(idTask);
+
+  // 1) Get data about the task to display on the dialog
+  const taskData = model.getDataFromOneTask(model.stateTasks.idTaskToEdit);
+
+  // 2) Show the dialog
+  editTaskView.addHandlerShowDialog(taskData);
+};
+
+const controlEditTask = function (newTaskData) {
+  // 1) Edit the task
+  model.editTask(newTaskData);
+
+  // 2) Close dialog
+  rerenderCalendar(calendarView.calendar);
+
+  // 3) Rerender list
+  taskListView.render(model.stateTasks.tasks);
+};
+
 ///////////////////////////////////////////////////////////////////////////////
 
 const controlListTasks = function () {
@@ -136,7 +162,8 @@ const controlCalendar = function (calendar) {
   calendar.setOption('eventReceive', function (info) {
     model.receive(info);
     info.event.remove();
-    updateCalendar(calendarView.calendar);
+    // updateCalendar(calendarView.calendar);
+    rerenderCalendar(calendarView.calendar);
   });
 
   hoursConstraint(calendar, '00:00:00', '23:59:00');
@@ -146,13 +173,7 @@ const controlCalendar = function (calendar) {
     rerenderCalendar(calendarView.calendar);
 
     hoursConstraint(calendar, '00:00:00', '23:59:00');
-    // calendar.setOption('eventConstraint', {
-    //   startTime: '00:00:00', // Earliest time allowed
-    //   endTime: '23:59:00', // Latest time allowed
-    // });
   });
-
-  hoursConstraint(calendar, '00:00:00', '23:59:00');
 
   calendar.setOption('eventDragStart', function () {
     // Dezactivează constrângerile când începe mutarea
@@ -168,19 +189,36 @@ const controlCalendar = function (calendar) {
     model.storeIdEvent(eventId);
 
     // Gets the data inside an object that is in an array
-    const eventData = model
+    const eventDataObject = model
       .getEventsFromLocalStorage()
-      .filter(e => e.id === eventId);
-    editEventView.addHandlerShowDialog(eventData[0]); // get the object of the array
+      .filter(e => e.id === eventId)[0];
+    editEventView.addHandlerShowDialog(eventDataObject); // get the object of the array
   });
 
   calendar.setOption('dateClick', function (info) {
-    addTaskView.addHandlerShowDialog();
+    /////////////// adauga ora in form si ziua plus un end default
+    console.log(info);
+    const dateData = model.eventClick(info);
+    addTaskView.setAllDay(info.allDay);
+    addTaskView.addHandlerShowDialog(dateData);
   });
 
-  // calendar.setOption('eventContent', function (arg) {
-  //   model.eventContent(arg);
-  // });
+  calendar.setOption('eventContent', function (arg) {
+    // model.eventContent(arg);
+
+    ///////////////////// Functia in model si pune o clasa lui eventContainer
+    //////////////////// Ca sa faci designul index.css
+    let eventContainer = document.createElement('div');
+    eventContainer.innerHTML = `
+      ${arg.timeText}  ${arg.event.title}
+    `;
+    eventContainer.style.background =
+      arg.event._def.extendedProps.categoryColor;
+    eventContainer.style.height = '100%';
+    eventContainer.style.color = 'black';
+
+    return { domNodes: [eventContainer] };
+  });
 };
 
 const init = function () {
@@ -190,8 +228,14 @@ const init = function () {
   // 1) Listen to add new task
   addTaskView.addHandlerNewTask(controlTask);
 
+  // 1.1) Listen to show edit task
+  taskListView.handlerShowTask(getIdTask); /// !!!!!!!!! change the function
+
+  // 1.2) Edit the task with the new data from user
+  editTaskView.addHandlerEditTask(controlEditTask);
+
   // 2) Edit an event
-  editEventView.addHandlerEditTaskEvent(controlEditEvent);
+  editEventView.addHandlerEditEvent(controlEditEvent);
 
   // 2.1) Listen for delete event
   editEventView.addHandlerDeleteEvent(controlDeleteEvent);

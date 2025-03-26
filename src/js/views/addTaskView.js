@@ -1,6 +1,7 @@
 import View from './View.js';
 
 class AddTaskView extends View {
+  _allDay = false;
   _parentElement = document.querySelector('.form-new-task');
   _dialogElement = document.querySelector('.dialog-add-task');
   _openDialogButton = document.querySelector('.open-form');
@@ -22,8 +23,23 @@ class AddTaskView extends View {
     );
   }
 
-  addHandlerShowDialog() {
+  // addHandlerShowDialog() {
+  //   this._dialogElement.showModal();
+  // }
+
+  addHandlerShowDialog(eventData) {
+    this._parentElement.querySelector("[name='start']").value =
+      eventData.start || '';
+    this._parentElement.querySelector("[name='end']").value =
+      eventData.end || '';
+    this._parentElement.querySelector("[name='date']").value =
+      eventData.date || '';
+
     this._dialogElement.showModal();
+  }
+
+  setAllDay(data) {
+    this._allDay = data;
   }
 
   _addHandlerCloseDialog() {
@@ -31,6 +47,7 @@ class AddTaskView extends View {
       'click',
       function () {
         this._dialogElement.close();
+        this._parentElement.reset();
       }.bind(this)
     );
   }
@@ -45,6 +62,7 @@ class AddTaskView extends View {
         e.clientY > dialogDimensions.bottom
       ) {
         this._dialogElement.close();
+        this._parentElement.reset();
       }
     });
   }
@@ -54,6 +72,7 @@ class AddTaskView extends View {
       e.preventDefault();
       const dataArr = [...new FormData(this._parentElement)];
       const newTask = Object.fromEntries(dataArr);
+      newTask.allDay = this._allDay;
       handler(newTask);
 
       this._dialogElement.close();

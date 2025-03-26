@@ -13,6 +13,8 @@ export const stateTasks = {
   tasks: [],
   events: [],
   idDeleteEvent: [],
+  idTaskToEdit: '',
+  lastColorPicked: '',
 };
 
 const createWeatherObject = function (data) {
@@ -47,6 +49,29 @@ const createCoordinatesObject = function (data) {
     latitude: coordinates.latitude,
     longitude: coordinates.longitude,
   };
+};
+/// functia ajunge in controller care preiau informatii form data
+
+export const saveLastColorPicked = function (data) {
+  const color = data.categoryColor;
+  stateTasks.lastColorPicked = color;
+  savePickedColorLocalStorage();
+};
+
+export const getColorFromLocalStorage = function () {
+  const color = localStorage.getItem('lastPickedColor');
+  stateTasks.lastColorPicked = color;
+
+  try {
+    return color ? color : stateTasks.lastColorPicked; // Ensure JSON parsing doesn't break
+  } catch (error) {
+    console.error('Error parsing localStorage data:', error);
+    localStorage.removeItem('lastPickedColor'); // Reset localStorage to prevent future errors
+    return '';
+  }
+};
+const savePickedColorLocalStorage = function () {
+  localStorage.setItem('lastPickedColor', stateTasks.lastColorPicked);
 };
 
 ///////////////////////////////////////////////////// From the user gets the latitude and longitude
@@ -110,6 +135,7 @@ const createTaskObject = function (task) {
     title: task.title,
     completed: false,
     id: crypto.randomUUID(),
+    allDay: task.allDay,
   };
 };
 
@@ -135,11 +161,11 @@ const createEventObject = function (event) {
 export const getStateTasks = function () {
   stateTasks.tasks = getTasksLocalStorage();
   stateTasks.events = getEventsFromLocalStorage();
+  stateTasks.lastColorPicked = getColorFromLocalStorage();
 };
 
 export const addTask = function (newTask) {
   // // 1) Update stateTasks
-  // stateTasks.tasks = getTasksLocalStorage();
   console.log(newTask);
 
   // 2) Creez un nou task
@@ -149,7 +175,7 @@ export const addTask = function (newTask) {
   stateTasks.tasks.push(task);
 
   // 4) Save the tasks into the local storage
-  addTaskToLocalStorage();
+  saveTasksToLocalStorage();
 
   // 5) newTask has dates then create event
   newTask.end && newTask.start && newTask.date && copyTask(task);
@@ -168,6 +194,52 @@ export const addEvent = function (newEvent) {
   saveEventsInLocalStorage(stateTasks.events);
 };
 
+export const getDataFromOneTask = function (idTask) {
+  const dataTask = stateTasks.tasks.filter(task => task.id === idTask)[0];
+  return dataTask;
+};
+
+export const storeIdTask = function (idTask) {
+  if (stateTasks.idTaskToEdit.length === 0) {
+    stateTasks.idTaskToEdit = idTask;
+  } else {
+    stateTasks.idTaskToEdit = '';
+    stateTasks.idTaskToEdit = idTask;
+  }
+};
+
+export const editTask = function (newTaskData) {
+  // cauta taskul care trebuie editat
+  const taskToEditData = getDataFromOneTask(stateTasks.idTaskToEdit);
+  console.log(taskToEditData);
+  console.log(stateTasks.tasks);
+
+  // const taskEdited = taskToEditData.map(key => {
+  //   key.title = newTaskData.title;
+  //   key.description = newTaskData.description;
+  //   key.activityCategory = newTaskData.activityCategory;
+  //   key.categoryColor = newTaskData.categoryColor;
+  // });
+
+  taskToEditData.title = newTaskData.title;
+  taskToEditData.description = newTaskData.description;
+  taskToEditData.activityCategory = newTaskData.activityCategory;
+  taskToEditData.categoryColor = newTaskData.categoryColor;
+
+  // const indexTaskToEdit = stateTasks.tasks.findIndex(
+  //   task => task.id === stateTasks.idTaskToEdit
+  // );
+
+  // console.log(taskEdited);
+  // console.log(indexTaskToEdit);
+  console.log(taskToEditData);
+  console.log(stateTasks.tasks);
+
+  // stateTasks.tasks[indexTaskToEdit] = taskEdited;
+
+  saveTasksToLocalStorage();
+};
+
 export const getTasksLocalStorage = function () {
   const tasks = localStorage.getItem('tasks2');
   try {
@@ -179,13 +251,13 @@ export const getTasksLocalStorage = function () {
   }
 };
 
-const addTaskToLocalStorage = function () {
+const saveTasksToLocalStorage = function () {
   localStorage.setItem('tasks2', JSON.stringify(stateTasks.tasks));
 };
 
 export const deleteTask = function (idTask) {
   stateTasks.tasks = stateTasks.tasks.filter(task => task.id !== idTask);
-  addTaskToLocalStorage();
+  saveTasksToLocalStorage();
 };
 
 /////////////////////////////////////////////////// delete an event with a specific id
@@ -324,6 +396,18 @@ export const eventContent = function (arg) {
 
 export const eventClick = function (info) {
   console.log(info);
-};
+  const dateObject = new Date(info.dateStr);
 
-//!!!!!!!!!!!!!!!!!!1 Pune nume comun la butoane ca sa ai acleasi css
+  const date = dateObject.toISOString().split('T')[0];
+  const start = dateObject.toISOString().split('T')[1].slice(0, 5); // first 8 chars
+
+  let end = dateObject.setMinutes(dateObject.getMinutes() + 29);
+  end = dateObject.toISOString().split('T')[1].slice(0, 5);
+  const dateData = {
+    date: date,
+    start: start,
+    end: end,
+  };
+
+  return dateData;
+};

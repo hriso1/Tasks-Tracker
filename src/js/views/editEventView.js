@@ -4,8 +4,8 @@ class EditEventView extends View {
   _parentElement = document.querySelector('.form-edit-event');
   _dialogElement = document.querySelector('.dialog-edit-event');
   _closeDialogButton = document.querySelector('.close-event');
-  _deleteEventButton = document.querySelector('.delete-event');
-  _input = document.querySelector('.input-event');
+  _deleteButton = document.querySelector('.delete-event');
+  // _input = document.querySelector('.input-event');
   constructor() {
     super();
     this._addHandlerClickOutside();
@@ -26,6 +26,7 @@ class EditEventView extends View {
   addHandlerShowDialog(eventData) {
     eventData.end = this._extractTime(eventData.end);
     eventData.start = this._extractTime(eventData.start);
+    console.log(eventData.date);
 
     this._parentElement.querySelector("[name='title']").value =
       eventData.title || '';
@@ -54,7 +55,7 @@ class EditEventView extends View {
   // }
 
   _addHandlerCloseDialog() {
-    [this._closeDialogButton, this._deleteEventButton].forEach(element => {
+    [this._closeDialogButton, this._deleteButton].forEach(element => {
       element.addEventListener(
         'click',
         function () {
@@ -81,19 +82,19 @@ class EditEventView extends View {
   // Used in controller to use the handler function
 
   addHandlerDeleteEvent(handler) {
-    this._deleteEventButton.addEventListener('click', handler);
+    this._deleteButton.addEventListener('click', handler);
   }
 
-  addHandlerEditTaskEvent(handler) {
+  addHandlerEditEvent(handler) {
     this._parentElement.addEventListener('submit', e => {
       e.preventDefault();
       const dataArr = [...new FormData(this._parentElement)];
-      const newTask = Object.fromEntries(dataArr);
-      handler(newTask);
+      const newEvent = Object.fromEntries(dataArr);
+      handler(newEvent);
 
       this._dialogElement.close();
 
-      this._parentElement.reset();
+      // this._parentElement.reset();
     });
   }
 }
