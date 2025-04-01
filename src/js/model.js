@@ -15,6 +15,7 @@ export const stateTasks = {
   idDeleteEvent: [],
   idTaskToEdit: '',
   lastColorPicked: '',
+  eventsGraphs: {},
 };
 
 const createWeatherObject = function (data) {
@@ -133,7 +134,6 @@ const createTaskObject = function (task) {
     end: end,
     start: start,
     title: task.title,
-    completed: false,
     id: crypto.randomUUID(),
     allDay: task.allDay,
   };
@@ -153,7 +153,7 @@ const createEventObject = function (event) {
     end: end,
     start: start,
     title: event.title,
-    completed: false,
+    checked: event.checked,
     id: crypto.randomUUID(),
   };
 };
@@ -182,13 +182,11 @@ export const addTask = function (newTask) {
 };
 
 export const addEvent = function (newEvent) {
-  console.log(newEvent);
   // 1) Create new event
   const event = createEventObject(newEvent);
   console.log(event);
   // 2) Add event in stateTasks.events
   stateTasks.events.push(event);
-  console.log(stateTasks.events);
 
   // 3) Save evenets in localStorage
   saveEventsInLocalStorage(stateTasks.events);
@@ -241,7 +239,7 @@ export const editTask = function (newTaskData) {
 };
 
 export const getTasksLocalStorage = function () {
-  const tasks = localStorage.getItem('tasks2');
+  const tasks = localStorage.getItem('tasks');
   try {
     return tasks ? JSON.parse(tasks) : []; // Ensure JSON parsing doesn't break
   } catch (error) {
@@ -252,7 +250,7 @@ export const getTasksLocalStorage = function () {
 };
 
 const saveTasksToLocalStorage = function () {
-  localStorage.setItem('tasks2', JSON.stringify(stateTasks.tasks));
+  localStorage.setItem('tasks', JSON.stringify(stateTasks.tasks));
 };
 
 export const deleteTask = function (idTask) {
@@ -266,9 +264,7 @@ export const deleteEvent = function () {
   stateTasks.events = stateTasks.events.filter(
     event => event.id !== stateTasks.idDeleteEvent[0]
   );
-  console.log(stateTasks.events);
   saveEventsInLocalStorage();
-  console.log(getEventsFromLocalStorage());
 };
 
 // Store the id of the element that MAY BE edited/deleted
@@ -305,6 +301,7 @@ function newEventCalendar(idEvent, startEvent, endEvent, dateEvent, allDay) {
       event.end = endEvent;
       event.date = dateEvent;
       event.allDay = allDay;
+      event.checked = 'no';
     }
   });
   stateTasks.events.push(event);
@@ -313,7 +310,7 @@ function newEventCalendar(idEvent, startEvent, endEvent, dateEvent, allDay) {
 
 ////////////////////////////////////////////////// Gets all the events of the calendar from local storage
 export function getEventsFromLocalStorage() {
-  const events = localStorage.getItem('events2');
+  const events = localStorage.getItem('events');
   try {
     return events ? JSON.parse(events) : [];
   } catch (error) {
@@ -325,7 +322,7 @@ export function getEventsFromLocalStorage() {
 
 /////////////////////////////////////////////////// Preia toate evenimentele si le salveaza in local Storage
 function saveEventsInLocalStorage(events = stateTasks.events) {
-  localStorage.setItem('events2', JSON.stringify(events));
+  localStorage.setItem('events', JSON.stringify(events));
 }
 
 ///////////////////////////////////////////////////////// When an event is received into the calendar
@@ -410,4 +407,14 @@ export const eventClick = function (info) {
   };
 
   return dateData;
+};
+
+export const rewriteEvents = function () {
+  const events = getEventsFromLocalStorage();
+  events.forEach(event => {
+    const { date, ...eventData } = event;
+    stateTasks.eventsGraphs[date]
+      ? stateTasks.eventsGraphs[date].push(eventData)
+      : (stateTasks.eventsGraphs[date] = [eventData]);
+  });
 };

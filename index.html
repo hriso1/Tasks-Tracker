@@ -29,7 +29,7 @@
         <ul class="list-pages" >
             <li>
                 <span class="logo" ><h4>Todo app</h4></span>
-                <button id="toggle-btn" onclick="toggleSidebar()" >
+                <button id="toggle-btn"  >
                     <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg> -->
                      <img src="./src/img/arrowback.png" >
                 </button>
@@ -43,7 +43,7 @@
                 </a>
             </li>
             <li>
-                <a id="chats-page" >
+                <a id="charts-page" >
                     <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M640-160v-280h160v280H640Zm-240 0v-640h160v640H400Zm-240 0v-440h160v440H160Z"/></svg> -->
                     <img src="./src/img/chart.png" >
 
@@ -55,171 +55,159 @@
     <!-- Main  -->
     <!-- Main  -->
     <!-- Main  -->
-    <main>
+    <main class="main" >
         <div class="left-main" >
-            <!-- <form class="newTask-container" >
-                <div>
-                    <span>Add new Task</span><input type="text" id="input-tasks" placeholder="task" >
+            <div>
+                <button class="open-form" >Open form</button>
+                <div class="tasks-list" >
+                    
                 </div>
-                <div>
-                    <input type="text" list="category-list" id="input-categories" placeholder="category" >
-                    <datalist id="category-list" >
-                        <option>Office</option>
-                        <option>Sala</option>
-                        <option>Scoala</option>
-                    </datalist>
-                    <select name="colours" id="colours">
-                        <option value="white" >white</option>
-                        <option value="lightblue" >lightblue</option>
-                        <option value="yellow" >yellow</option>
-                    </select>
-                </div>
-                <div class="add-task-container" >
-                    <button type="submit" class="add-task-button" >Add task</button>
-                </div>
-            </form> -->
-            <button class="open-form" >Open form</button>
-
-            <dialog class="dialog-add-task" >
-                <div class="close-header-form" >
-                    <div class="draggable-header-form" ></div>
-                 
-                    <button class="close-form close-task " >
-                        <img src="./src/img/cross.png"   >
-                    </button>
-                </div>
-                <form class="form-new-task">
-                    <div class="input-title-form" >
-                        <input type="text" placeholder="Title" name="title" required >
-                    </div>
-                    <div class="form-information" >
-                        <div class="form-description" >
-                            <img src="./src/img/job-description.png" alt="" class="form-icon">
-                            <textarea name="description" class="description-textarea">descriere</textarea>
-                        </div>
-                        <div class="form-time" >
-                            <img src="./src/img/clock.png" alt="clock image" class="form-icon" >
-                            <input type="time" class="input-time" name="start" >
-                            <div style="font-size: 0.8em;" >to</div>
-                            <input type="time" class="input-time" name="end" >
-                            <input type="date" class="input-date" name="date" >
-                        </div>
-                        <div class="form-category">
-                            <img src="./src/img/categories.png" alt="activity category" >
-                            <input list = 'category-options' name="activityCategory" >
-                            <datalist id="category-options" placeholder="task category" >
-                                <option value="Important" ></option>
-                                <option value="Job" ></option>
-                                <option value="Gym" ></option>
-                            </datalist>
-                        </div>
-                        <div class="form-color">
-                            <img src="./src/img/paint.png" alt="color category"  >
-                            <div style="font-size: 0.8em;" >category color</div>
-                            <input type="color" name="categoryColor" value="#ff00ff" >
-                        </div>
-                    </div>
-                    <button class="btn create-task" >Create task</button>
-                </form>
-            </dialog>
-
-            <dialog class="dialog-edit-task" >
-                <div class="close-header-form" >
-                    <div class="draggable-header-form" ></div>
-                    <button class="close-form delete-edit-task " >
-                        <img src="./src/img/delete.png"   >
-                    </button>
-                    <button class="close-form close-edit-task " >
-                        <img src="./src/img/cross.png"   >
-                    </button>
-                </div>
-            <form class="form-edit-task">
-                <div class="input-title-form" >
-                    <input type="text" placeholder="Title" name="title" required >
-                </div>
-                <div class="form-information" >
-                    <div class="form-description" >
-                        <img src="./src/img/job-description.png" alt="" class="form-icon">
-                        <textarea name="description" class="description-textarea">descriere</textarea>
-                    </div>
-                    <div class="form-category">
-                        <img src="./src/img/categories.png" alt="activity category" >
-                        <input list = 'category-options' name="activityCategory" >
-                        <datalist id="category-options" placeholder="task category" >
-                            <option value="Important" ></option>
-                            <option value="Job" ></option>
-                            <option value="Gym" ></option>
-                        </datalist>
-                    </div>
-                    <div class="form-color">
-                        <img src="./src/img/paint.png" alt="color category"  >
-                        <div style="font-size: 0.8em;" >category color</div>
-                        <input type="color" name="categoryColor" value="#ff00ff" >
-                    </div>
-                </div>
-                <button class="btn edit-task" >Edit task</button>
-            </form>
-        </dialog>
-
-            <dialog class="dialog-edit-event" >
-                <div class="close-header-form" >
-                    <div class="draggable-header-form" ></div>
-                    <button class="close-form delete-event " >
-                        <img src="./src/img/delete.png"   >
-                    </button>
-                    <button class="close-form close-event" >
-                        <img src="./src/img/cross.png" >
-                    </button>
-                </div>
-                <form class="form-edit-event">
-                    <div class="input-title-form " >
-                        <input type="text" placeholder="Title" name="title" required class="input-event" >
-                    </div>
-                    <div class="form-information" >
-                        <div class="form-description" >
-                            <img src="./src/img/job-description.png" alt="" class="form-icon">
-                            <textarea name="description" class="description-textarea">descriere</textarea>
-                        </div>
-                        <div class="form-time" >
-                            <img src="./src/img/clock.png" alt="clock image" class="form-icon" >
-                            <input type="time" class="input-time" name="start" >
-                            <div style="font-size: 0.8em;" >to</div>
-                            <input type="time" class="input-time" name="end" >
-                            <input type="date" class="input-date" name="date" >
-                        </div>
-                        <div class="form-category">
-                            <img src="./src/img/categories.png" alt="activity category" >
-                            <input list = 'category-options' name="activityCategory" >
-                            <datalist id="category-options" placeholder="task category" >
-                                <option value="Important" ></option>
-                                <option value="Job" ></option>
-                                <option value="Gym" ></option>
-                            </datalist>
-                        </div>
-                        <div class="form-color">
-                            <img src="./src/img/paint.png" alt="color category"  >
-                            <div style="font-size: 0.8em;" >category color</div>
-                            <input type="color" name="categoryColor" value="#ff00ff" >
-                        </div>
-                    </div>
-                    <button class="btn create-task" >Apply changes</button>
-                </form>
-
-                
-            </dialog>
-
-
-            <div class="tasks-list" >
-                
             </div>
+           
         </div>
         <div class="right-main" >
            <div id="calendar" >
 
            </div>
-        </div>
-        
+        </div>   
     </main>
+    <!-- <div class="charts-main" >
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Perferendis, minima omnis ipsum libero cum ad a ex. Ad sequi reiciendis tenetur quasi veritatis eveniet eum, delectus eius laudantium placeat. Nisi harum sunt, atque voluptatum laborum labore. Vitae saepe dolorum alias vel ipsa, est, temporibus quasi perferendis officiis corrupti ducimus aperiam harum culpa odit magni! Itaque iusto facere exercitationem molestiae pariatur, deserunt aperiam natus, sunt enim neque ea eligendi veritatis eius quas omnis aut nesciunt harum qui fuga odit? Consequatur porro corporis consequuntur, quae voluptatem nam veniam quis, eius fuga illo accusamus asperiores hic saepe fugiat a itaque pariatur obcaecati non?
+    </div> -->
+
+    <dialog class="dialog-add-task" >
+        <div class="close-header-form" >
+            <div class="draggable-header-form" ></div>
+         
+            <button class="close-form close-task " >
+                <img src="./src/img/cross.png"   >
+            </button>
+        </div>
+        <form class="form-new-task">
+            <div class="input-title-form" >
+                <input type="text" placeholder="Title" name="title" required >
+            </div>
+            <div class="form-information" >
+                <div class="form-description" >
+                    <img src="./src/img/job-description.png" alt="" class="form-icon">
+                    <textarea name="description" class="description-textarea">descriere</textarea>
+                </div>
+                <div class="form-time" >
+                    <img src="./src/img/clock.png" alt="clock image" class="form-icon" >
+                    <input type="time" class="input-time" name="start" >
+                    <div style="font-size: 0.8em;" >to</div>
+                    <input type="time" class="input-time" name="end" >
+                    <input type="date" class="input-date" name="date" >
+                </div>
+                <div class="form-category">
+                    <img src="./src/img/categories.png" alt="activity category" >
+                    <input list = 'category-options' name="activityCategory" >
+                    <datalist id="category-options" placeholder="task category" >
+                        <option value="Important" ></option>
+                        <option value="Job" ></option>
+                        <option value="Gym" ></option>
+                    </datalist>
+                </div>
+                <div class="form-color">
+                    <img src="./src/img/paint.png" alt="color category"  >
+                    <div style="font-size: 0.8em;" >category color</div>
+                    <input type="color" name="categoryColor" value="#ff00ff" >
+                </div>
+            </div>
+            <button class="btn create-task" >Create task</button>
+        </form>
+    </dialog>
+
+    <dialog class="dialog-edit-task" >
+        <div class="close-header-form" >
+            <div class="draggable-header-form" ></div>
+            <button class="close-form delete-edit-task " >
+                <img src="./src/img/delete.png"   >
+            </button>
+            <button class="close-form close-edit-task " >
+                <img src="./src/img/cross.png"   >
+            </button>
+        </div>
+    <form class="form-edit-task">
+        <div class="input-title-form" >
+            <input type="text" placeholder="Title" name="title" required >
+        </div>
+        <div class="form-information" >
+            <div class="form-description" >
+                <img src="./src/img/job-description.png" alt="" class="form-icon">
+                <textarea name="description" class="description-textarea">descriere</textarea>
+            </div>
+            <div class="form-category">
+                <img src="./src/img/categories.png" alt="activity category" >
+                <input list = 'category-options' name="activityCategory" >
+                <datalist id="category-options" placeholder="task category" >
+                    <option value="Important" ></option>
+                    <option value="Job" ></option>
+                    <option value="Gym" ></option>
+                </datalist>
+            </div>
+            <div class="form-color">
+                <img src="./src/img/paint.png" alt="color category"  >
+                <div style="font-size: 0.8em;" >category color</div>
+                <input type="color" name="categoryColor" value="#ff00ff" >
+            </div>
+        </div>
+        <button class="btn edit-task" >Edit task</button>
+    </form>
+</dialog>
+
+    <dialog class="dialog-edit-event" >
+        <div class="close-header-form" >
+            <div class="draggable-header-form" ></div>
+            
+            <button class="close-form delete-event " >
+                <img src="./src/img/delete.png"   >
+            </button>
+            <button class="close-form close-event" >
+                <img src="./src/img/cross.png" >
+            </button>
+        </div>
+        <form class="form-edit-event">
+            <div class="input-title-form " >
+                <input type="text" placeholder="Title" name="title" required class="input-event" >
+            </div>
+            <div class="form-information" >
+                <div class="form-description" >
+                    <img src="./src/img/job-description.png" alt="" class="form-icon">
+                    <textarea name="description" class="description-textarea">descriere</textarea>
+                </div>
+                <div class="form-time" >
+                    <img src="./src/img/clock.png" alt="clock image" class="form-icon" >
+                    <input type="time" class="input-time" name="start" >
+                    <div style="font-size: 0.8em;" >to</div>
+                    <input type="time" class="input-time" name="end" >
+                    <input type="date" class="input-date" name="date" >
+                </div>
+                <div class="form-category">
+                    <img src="./src/img/categories.png" alt="activity category" >
+                    <input list = 'category-options' name="activityCategory" >
+                    <datalist id="category-options" placeholder="task category" >
+                        <option value="Important" ></option>
+                        <option value="Job" ></option>
+                        <option value="Gym" ></option>
+                    </datalist>
+                </div>
+                <div class="form-color">
+                    <img src="./src/img/paint.png" alt="color category"  >
+                    <div style="font-size: 0.8em;" >category color</div>
+                    <input type="color" name="categoryColor" value="#ff00ff" >
+                </div>
+                <div>
+                    <input id="check-event" type="checkbox" class="checkbox" name="checked" value="yes" />
+                    <label for="check-event" class="checkbox-label" >In progress</label>
+                </div>
+
+            </div>
+            <button class="btn create-task" >Apply changes</button>
+        </form>
+
+        
+    </dialog>
     
       
 </body>

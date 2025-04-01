@@ -9,33 +9,34 @@ import calendarView from './views/calendarView.js';
 import editEventView from './views/editEventView.js';
 import { hoursConstraint } from './helpers.js';
 import editTaskView from './views/editTaskView.js';
+import sidebarView from './views/sidebarView.js';
 
-const toggleButton = document.getElementById('toggle-btn');
-const sidebar = document.getElementById('sidebar');
-const sidebarListContainer = document.querySelector('.list-pages');
+// const toggleButton = document.getElementById('toggle-btn');
+// const sidebar = document.getElementById('sidebar');
+// const sidebarListContainer = document.querySelector('.list-pages');
 
-////////////////////////////////////////////////////// Adauga clasa active linkului apasat
+// ////////////////////////////////////////////////////// Adauga clasa active linkului apasat
 
-sidebarListContainer.addEventListener('click', function (event) {
-  // Finds the clicked li
-  const clickedLi = event.target.closest('li');
-  if (!clickedLi || clickedLi.classList.contains('active')) return;
+// sidebarListContainer.addEventListener('click', function (event) {
+//   // Finds the clicked li
+//   const clickedLi = event.target.closest('li');
+//   if (!clickedLi || clickedLi.classList.contains('active')) return;
 
-  // Removes the active class from the current li
-  const activeLi = document.querySelector('.list-pages li.active');
-  if (activeLi) activeLi.classList.remove('active');
+//   // Removes the active class from the current li
+//   const activeLi = document.querySelector('.list-pages li.active');
+//   if (activeLi) activeLi.classList.remove('active');
 
-  // Add the active class to the clicked li
-  clickedLi.classList.add('active');
-});
+//   // Add the active class to the clicked li
+//   clickedLi.classList.add('active');
+// });
 
-///////////////////////////////////////////////////// Roteste iconita de la sidebar
-function toggleSidebar() {
-  sidebar.classList.toggle('close');
-  toggleButton.classList.toggle('rotate');
-}
-// allows the function to be used in directly in html document
-window.toggleSidebar = toggleSidebar;
+// ///////////////////////////////////////////////////// Roteste iconita de la sidebar
+// function toggleSidebar() {
+//   sidebar.classList.toggle('close');
+//   toggleButton.classList.toggle('rotate');
+// }
+// // allows the function to be used in directly in html document
+// window.toggleSidebar = toggleSidebar;
 
 ///////////////////////////////////////////////////// Function to get the data about the weather
 
@@ -203,6 +204,10 @@ const controlCalendar = function (calendar) {
     addTaskView.addHandlerShowDialog(dateData);
   });
 
+  calendar.setOption('eventAllow', function (dropInfo, draggedEvent) {
+    return true;
+  });
+
   calendar.setOption('eventContent', function (arg) {
     // model.eventContent(arg);
 
@@ -219,6 +224,17 @@ const controlCalendar = function (calendar) {
 
     return { domNodes: [eventContainer] };
   });
+};
+
+const controlSidebar = function () {
+  sidebarView.handlerSidebar();
+  sidebarView.toggleSidebar();
+  sidebarView.showChartsPage();
+};
+
+const renderHomePage = function () {
+  calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
+  taskListView.addHandlerRenderList(controlListTasks);
 };
 
 const init = function () {
@@ -254,23 +270,29 @@ const init = function () {
 
   // 7) Renders the quotes panel
   controlQuotes();
+  // 8) Control sidebar
+  controlSidebar();
+  sidebarView.showHomeContent(renderHomePage);
 };
 
 init();
 
+model.rewriteEvents();
+// console.log(model.stateTasks.eventsGraphs);
+
 // let events = {
-//   '12-03-2025': [
+//   '1-04-2025': [
 //     { title: 'test1', author: 'andrei' },
 //     { title: 'test2', author: 'hriso' },
 //   ],
-//   '13-03-2025': [
+//   '2-04-2025': [
 //     { title: 'test3', author: 'andreii' },
 //     { title: 'test4', author: 'hrisoo' },
 //   ],
 // };
 // let event = {
-//   date: '14-03-2025',
-//   title: 'test5',
+//   date: '1-04-2025',
+//   title: 'test9',
 //   author: 'hrisoo',
 // };
 
@@ -278,6 +300,41 @@ init();
 // events[dateEvent]
 //   ? events[dateEvent].push(event)
 //   : (events[dateEvent] = [event]);
+// // console.log(events);
+
+// const events1 = [
+//   {
+//     date: '1-04-2025',
+//     title: 'test5',
+//     author: 'hrisoo',
+//   },
+//   {
+//     date: '2-04-2025',
+//     title: 'test6',
+//     author: 'hrisoo',
+//   },
+//   {
+//     date: '2-04-2025',
+//     title: 'test7',
+//     author: 'hrisoo',
+//   },
+//   {
+//     date: '3-04-2025',
+//     title: 'test8',
+//     author: 'hrisoo',
+//   },
+// ];
+
+// const rewriteEvents = function () {
+//   events1.forEach(event => {
+//     const { date, ...eventData } = event;
+//     // if the date exists push the event, else create a new date property
+//     events[date] ? events[date].push(eventData) : (events[date] = [eventData]);
+//   });
+// };
+
+// rewriteEvents();
+
 // console.log(events);
 
 // const inputTasks = document.getElementById('input-tasks');

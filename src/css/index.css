@@ -266,6 +266,9 @@ li img{
 /* CSS pentru continutul din main */
 /* CSS pentru continutul din main */
 
+.charts-main{
+    display: block;
+}
 
 main{
     display: grid;
@@ -295,9 +298,6 @@ main{
 }
 
 
-
-  
-  
 .newTask-container {
     /* background-color: #545677; */
     height: 100px;
@@ -374,8 +374,7 @@ main{
 }
 
 main{
-    grid-area: main;
-
+    /* grid-area: main; */
     padding: 20px;
     padding-bottom: 0;
 }
@@ -562,7 +561,15 @@ dialog img {
 
 .draggable-header-form:hover ~.close-form {
     background-color: rgba(184, 184, 184, 0.568);
-    
+}
+
+.draggable-header-form:hover ~.checkbox {
+    background-color: rgba(184, 184, 184, 0.568);
+}
+
+/* checkbox */
+.checkbox{
+    border: none;
 }
 
 .close-form{
