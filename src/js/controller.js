@@ -11,33 +11,6 @@ import { hoursConstraint } from './helpers.js';
 import editTaskView from './views/editTaskView.js';
 import sidebarView from './views/sidebarView.js';
 
-// const toggleButton = document.getElementById('toggle-btn');
-// const sidebar = document.getElementById('sidebar');
-// const sidebarListContainer = document.querySelector('.list-pages');
-
-// ////////////////////////////////////////////////////// Adauga clasa active linkului apasat
-
-// sidebarListContainer.addEventListener('click', function (event) {
-//   // Finds the clicked li
-//   const clickedLi = event.target.closest('li');
-//   if (!clickedLi || clickedLi.classList.contains('active')) return;
-
-//   // Removes the active class from the current li
-//   const activeLi = document.querySelector('.list-pages li.active');
-//   if (activeLi) activeLi.classList.remove('active');
-
-//   // Add the active class to the clicked li
-//   clickedLi.classList.add('active');
-// });
-
-// ///////////////////////////////////////////////////// Roteste iconita de la sidebar
-// function toggleSidebar() {
-//   sidebar.classList.toggle('close');
-//   toggleButton.classList.toggle('rotate');
-// }
-// // allows the function to be used in directly in html document
-// window.toggleSidebar = toggleSidebar;
-
 ///////////////////////////////////////////////////// Function to get the data about the weather
 
 const controlWeather = async function () {
@@ -217,8 +190,12 @@ const controlCalendar = function (calendar) {
     eventContainer.innerHTML = `
       ${arg.timeText}  ${arg.event.title}
     `;
+
     eventContainer.style.background =
       arg.event._def.extendedProps.categoryColor;
+
+    // if (arg.event._def.extendedProps.checked === true) !!!!!!!!!!!!!!!
+
     eventContainer.style.height = '100%';
     eventContainer.style.color = 'black';
 
@@ -229,12 +206,17 @@ const controlCalendar = function (calendar) {
 const controlSidebar = function () {
   sidebarView.handlerSidebar();
   sidebarView.toggleSidebar();
-  sidebarView.showChartsPage();
+  sidebarView.showHomeContent();
 };
 
-const renderHomePage = function () {
-  calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
-  taskListView.addHandlerRenderList(controlListTasks);
+// const renderHomePage = function () {
+//   calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
+//   taskListView.addHandlerRenderList(controlListTasks);
+// };
+
+const controlContentCharts = function () {
+  model.rewriteEvents();
+  console.log(model.stateTasks.eventsGraphs);
 };
 
 const init = function () {
@@ -272,7 +254,9 @@ const init = function () {
   controlQuotes();
   // 8) Control sidebar
   controlSidebar();
-  sidebarView.showHomeContent(renderHomePage);
+
+  // 9) Show charts page
+  sidebarView.showChartsPage(controlContentCharts);
 };
 
 init();

@@ -6,8 +6,8 @@ class SidebarView extends View {
   _sidebarListContainer = document.querySelector('.list-pages');
   _chartsLink = document.getElementById('charts-page');
   _homeLink = document.getElementById('home-page');
-  _main = document.querySelector('.main');
-  _chartsMain = document.querySelector('.charts-main');
+  _sectionCalendar = document.querySelector('.section-calendar');
+  _sectionCharts = document.querySelector('.section-charts');
 
   ////////////////////////////////////////////////////// Adauga clasa active linkului apasat
   handlerSidebar() {
@@ -33,15 +33,19 @@ class SidebarView extends View {
     });
   }
 
-  showChartsPage() {
+  showChartsPage(handler) {
     this._chartsLink.addEventListener('click', () => {
-      this._main.textContent = '';
+      handler();
+
+      this._sectionCharts.style.display = 'block';
+      this._sectionCalendar.style.display = 'none';
     });
   }
 
-  showHomeContent(handle) {
-    this._homeLink.addEventListener('click', function () {
-      handle();
+  showHomeContent() {
+    this._homeLink.addEventListener('click', () => {
+      this._sectionCharts.style.display = 'none';
+      this._sectionCalendar.style.display = 'grid';
     });
   }
   // allows the function to be used in directly in html document

@@ -38,6 +38,7 @@ body{
     grid-template-areas: 
     "sidebar navbar"
     "sidebar main"
+    "sidebar charts"
 }
 
 
@@ -266,11 +267,8 @@ li img{
 /* CSS pentru continutul din main */
 /* CSS pentru continutul din main */
 
-.charts-main{
-    display: block;
-}
-
-main{
+.section-calendar{
+    grid-area: main;
     display: grid;
     grid-template-columns: 200px 1fr;
     grid-template-areas: 
@@ -373,13 +371,12 @@ main{
     border: 1px solid var(--line-clr);
 }
 
-main{
-    /* grid-area: main; */
+.section-calendar{
     padding: 20px;
     padding-bottom: 0;
 }
 
-main p{
+.section-calendar p{
     color: bar(--secondary-txt-clr);
     margin-top: 5px;
     margin-bottom: 15px;
@@ -458,7 +455,7 @@ main p{
         font-size: 0.9em;
     }
 
-    main{
+    .section-calendar{
         padding: 1em 1em 60px 1em;
     }
 
@@ -664,15 +661,17 @@ dialog img {
 
 }
 
-/* .fc-event {
-    padding: 2px; 
-  } */
-  
-  /* .fc-event[style*="height: 20px"],
-  .fc-event[style*="height: 25px"],
-  .fc-event[style*="height: 30px"] {
-    padding: 0px; 
-    font-size: 10px; 
- 
-  } */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
+/* Charts */
 
+.section-charts{
+    display: none;
+    /* background-color: rgb(0, 255, 17); */
+}

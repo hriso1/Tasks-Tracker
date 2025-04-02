@@ -301,7 +301,7 @@ function newEventCalendar(idEvent, startEvent, endEvent, dateEvent, allDay) {
       event.end = endEvent;
       event.date = dateEvent;
       event.allDay = allDay;
-      event.checked = 'no';
+      event.checked = false;
     }
   });
   stateTasks.events.push(event);
@@ -328,7 +328,6 @@ function saveEventsInLocalStorage(events = stateTasks.events) {
 ///////////////////////////////////////////////////////// When an event is received into the calendar
 
 export const receive = function (info) {
-  console.log(info);
   const idEvent = info.draggedEl.dataset.id;
   let startEvent = info.event._instance.range.start;
   let endEvent = info.event._instance.range.end;
@@ -374,7 +373,7 @@ export const eventContent = function (arg) {
   // foloseste valoriile din arg pentru a afisa ce vrei sa apara in element
   // da return {domNodes: [eventContainer]} --> numele containerului in care ai tot
 
-  // console.log('Arg este', arg);
+  console.log('Arg este', arg);
   // Create time display
   let eventTime = document.createElement('span');
   eventTime.innerText = arg.timeText; // -------> text
@@ -410,6 +409,7 @@ export const eventClick = function (info) {
 };
 
 export const rewriteEvents = function () {
+  stateTasks.eventsGraphs = {};
   const events = getEventsFromLocalStorage();
   events.forEach(event => {
     const { date, ...eventData } = event;
