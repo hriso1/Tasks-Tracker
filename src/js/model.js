@@ -16,6 +16,7 @@ export const stateTasks = {
   idTaskToEdit: '',
   lastColorPicked: '',
   eventsGraphs: {},
+  categoryColors: {},
 };
 
 const createWeatherObject = function (data) {
@@ -162,6 +163,7 @@ export const getStateTasks = function () {
   stateTasks.tasks = getTasksLocalStorage();
   stateTasks.events = getEventsFromLocalStorage();
   stateTasks.lastColorPicked = getColorFromLocalStorage();
+  stateTasks.categoryColors = getCategoryColorsFromLocalStorage();
 };
 
 export const addTask = function (newTask) {
@@ -174,6 +176,10 @@ export const addTask = function (newTask) {
   // 3) I add the task in the stateTasks
   stateTasks.tasks.push(task);
 
+  // 3.1) Change categoryColor if is changed
+  if (task.activityCategory)
+    verifyCategoryColor(task.activityCategory, task.categoryColor);
+
   // 4) Save the tasks into the local storage
   saveTasksToLocalStorage();
 
@@ -181,10 +187,58 @@ export const addTask = function (newTask) {
   newTask.end && newTask.start && newTask.date && copyTask(task);
 };
 
+/////////////////////////////////////////////////// Get all colors from localStorage
+export function getCategoryColorsFromLocalStorage() {
+  const colors = localStorage.getItem('categoryColors');
+  try {
+    return colors ? JSON.parse(colors) : {};
+  } catch (error) {
+    console.log('Cant get category color from LocalStorage');
+    localStorage.removeItem('categoryColors');
+    return {};
+  }
+}
+
+//////////////////////////////////////////////////// Save colors in LocalStorage
+function saveCategoryColorsInLocalStorage() {
+  localStorage.setItem(
+    'categoryColors',
+    JSON.stringify(stateTasks.categoryColors)
+  );
+}
+
+//////////////////////////////////////////////////// Verify if category color is changed
+function verifyCategoryColor(category, color) {
+  let categoryColor = stateTasks.categoryColors; // un obiect
+  console.log(categoryColor);
+
+  if (!categoryColor[category]) categoryColor[category] = color;
+
+  if (categoryColor[category]) {
+    if (categoryColor[category] !== color) {
+      // Schimba culoarea tuturor taskurilor si evenimentelor care au acel category cu noul categoryColor
+      stateTasks.tasks.forEach(task => {
+        if (task.activityCategory === category) task.categoryColor = color;
+      });
+      stateTasks.events.forEach(task => {
+        if (task.activityCategory === category) task.categoryColor = color;
+      });
+      categoryColor[category] = color;
+    }
+  }
+
+  stateTasks.categoryColors = categoryColor;
+  console.log(stateTasks.categoryColors);
+
+  saveCategoryColorsInLocalStorage();
+}
+
 export const addEvent = function (newEvent) {
   // 1) Create new event
   const event = createEventObject(newEvent);
   console.log(event);
+  if (event.activityCategory)
+    verifyCategoryColor(event.activityCategory, event.categoryColor);
   // 2) Add event in stateTasks.events
   stateTasks.events.push(event);
 
@@ -209,31 +263,20 @@ export const storeIdTask = function (idTask) {
 export const editTask = function (newTaskData) {
   // cauta taskul care trebuie editat
   const taskToEditData = getDataFromOneTask(stateTasks.idTaskToEdit);
-  console.log(taskToEditData);
-  console.log(stateTasks.tasks);
-
-  // const taskEdited = taskToEditData.map(key => {
-  //   key.title = newTaskData.title;
-  //   key.description = newTaskData.description;
-  //   key.activityCategory = newTaskData.activityCategory;
-  //   key.categoryColor = newTaskData.categoryColor;
-  // });
 
   taskToEditData.title = newTaskData.title;
   taskToEditData.description = newTaskData.description;
   taskToEditData.activityCategory = newTaskData.activityCategory;
   taskToEditData.categoryColor = newTaskData.categoryColor;
 
-  // const indexTaskToEdit = stateTasks.tasks.findIndex(
-  //   task => task.id === stateTasks.idTaskToEdit
-  // );
+  if (taskToEditData.activityCategory)
+    verifyCategoryColor(
+      taskToEditData.activityCategory,
+      taskToEditData.categoryColor
+    );
 
-  // console.log(taskEdited);
-  // console.log(indexTaskToEdit);
   console.log(taskToEditData);
   console.log(stateTasks.tasks);
-
-  // stateTasks.tasks[indexTaskToEdit] = taskEdited;
 
   saveTasksToLocalStorage();
 };

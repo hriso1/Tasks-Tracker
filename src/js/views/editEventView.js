@@ -7,6 +7,7 @@ class EditEventView extends View {
   _deleteButton = document.querySelector('.delete-event');
   _checkBox = document.querySelector('.checkbox');
   _label = document.querySelector('.checkbox-label');
+  _activityCategory = document.querySelector("[name = 'activityCategory']");
 
   constructor() {
     super();

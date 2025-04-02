@@ -74,6 +74,7 @@ const controlEditEvent = function (newEvent) {
 
   // Rerender calendar with the new event
   rerenderCalendar(calendarView.calendar);
+  taskListView.render(model.stateTasks.tasks);
 };
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -208,11 +209,6 @@ const controlSidebar = function () {
   sidebarView.toggleSidebar();
   sidebarView.showHomeContent();
 };
-
-// const renderHomePage = function () {
-//   calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
-//   taskListView.addHandlerRenderList(controlListTasks);
-// };
 
 const controlContentCharts = function () {
   model.rewriteEvents();
