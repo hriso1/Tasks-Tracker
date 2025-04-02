@@ -672,6 +672,9 @@ dialog img {
 /* Charts */
 
 .section-charts{
+    display: grid;
+}
+
+.invisible{
     display: none;
-    /* background-color: rgb(0, 255, 17); */
 }

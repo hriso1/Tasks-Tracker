@@ -215,6 +215,12 @@ const controlContentCharts = function () {
   console.log(model.stateTasks.eventsGraphs);
 };
 
+const controlCategoryColor = function (category) {
+  console.log('hey');
+  if (model.stateTasks.categoryColors[category])
+    editEventView.changeColor(model.stateTasks.categoryColors[category]);
+};
+
 const init = function () {
   // 0) Populate the model with data
   model.getStateTasks();
@@ -233,6 +239,9 @@ const init = function () {
 
   // 2.1) Listen for delete event
   editEventView.addHandlerDeleteEvent(controlDeleteEvent);
+
+  // 2.2) Listen for category change
+  editEventView.changeColorBasedOnCategory(controlCategoryColor);
 
   // 3) Create new calendar with events
   calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());

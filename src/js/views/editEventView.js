@@ -7,13 +7,31 @@ class EditEventView extends View {
   _deleteButton = document.querySelector('.delete-event');
   _checkBox = document.querySelector('.checkbox');
   _label = document.querySelector('.checkbox-label');
-  _activityCategory = document.querySelector("[name = 'activityCategory']");
+  _categoryElement = this._parentElement.querySelector(
+    "[name='activityCategory']"
+  );
+  _colorElement = this._parentElement.querySelector("[name='categoryColor']");
 
   constructor() {
     super();
     this._addHandlerClickOutside();
     this._addHandlerCloseDialog();
     this._checkEventCompleted();
+  }
+
+  changeColorBasedOnCategory(handler) {
+    this._categoryElement.addEventListener('change', event => {
+      const category = event.target.value;
+      handler(category);
+    });
+
+    this._categoryElement.addEventListener('focus', event => {
+      event.target.value = '';
+    });
+  }
+
+  changeColor(color) {
+    this._colorElement.value = color;
   }
 
   _checkEventCompleted() {

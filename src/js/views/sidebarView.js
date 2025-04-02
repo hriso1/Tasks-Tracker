@@ -35,17 +35,20 @@ class SidebarView extends View {
 
   showChartsPage(handler) {
     this._chartsLink.addEventListener('click', () => {
+      // if (!this._sectionCharts.classList.contains('invisible')) return; // sectionCharts is visible
       handler();
 
-      this._sectionCharts.style.display = 'block';
-      this._sectionCalendar.style.display = 'none';
+      this._sectionCalendar.classList.add('invisible');
+      this._sectionCharts.classList.remove('invisible');
     });
   }
 
   showHomeContent() {
     this._homeLink.addEventListener('click', () => {
-      this._sectionCharts.style.display = 'none';
-      this._sectionCalendar.style.display = 'grid';
+      // if (!this._sectionCalendar.classList.contains('invisible')) return; // sectionCalendar is visible
+
+      this._sectionCalendar.classList.remove('invisible');
+      this._sectionCharts.classList.add('invisible');
     });
   }
   // allows the function to be used in directly in html document

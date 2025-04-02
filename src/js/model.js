@@ -237,8 +237,12 @@ export const addEvent = function (newEvent) {
   // 1) Create new event
   const event = createEventObject(newEvent);
   console.log(event);
-  if (event.activityCategory)
+
+  if (event.activityCategory) {
     verifyCategoryColor(event.activityCategory, event.categoryColor);
+    saveTasksToLocalStorage();
+  }
+
   // 2) Add event in stateTasks.events
   stateTasks.events.push(event);
 
@@ -269,11 +273,13 @@ export const editTask = function (newTaskData) {
   taskToEditData.activityCategory = newTaskData.activityCategory;
   taskToEditData.categoryColor = newTaskData.categoryColor;
 
-  if (taskToEditData.activityCategory)
+  if (taskToEditData.activityCategory) {
     verifyCategoryColor(
       taskToEditData.activityCategory,
       taskToEditData.categoryColor
     );
+    saveEventsInLocalStorage();
+  }
 
   console.log(taskToEditData);
   console.log(stateTasks.tasks);
