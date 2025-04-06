@@ -10,6 +10,10 @@ import editEventView from './views/editEventView.js';
 import { hoursConstraint } from './helpers.js';
 import editTaskView from './views/editTaskView.js';
 import sidebarView from './views/sidebarView.js';
+import pieView from './views/charts/pieView.js';
+import checkIconUrl from '../img/checked.svg';
+import uncheckedIconUrl from '../img/unchecked.svg';
+import doughnutView from './views/charts/doughnutView.js';
 
 ///////////////////////////////////////////////////// Function to get the data about the weather
 
@@ -188,8 +192,16 @@ const controlCalendar = function (calendar) {
     ///////////////////// Functia in model si pune o clasa lui eventContainer
     //////////////////// Ca sa faci designul index.css
     let eventContainer = document.createElement('div');
+
+    let checkIcon = document.createElement('img');
+    checkIcon.src = arg.event._def.extendedProps.checked
+      ? checkIconUrl
+      : uncheckedIconUrl;
+
+    checkIcon.style.height = '20px';
+
     eventContainer.innerHTML = `
-      ${arg.timeText}  ${arg.event.title}
+      ${checkIcon.outerHTML} ${arg.timeText}  ${arg.event.title}
     `;
 
     eventContainer.style.background =
@@ -211,12 +223,19 @@ const controlSidebar = function () {
 };
 
 const controlContentCharts = function () {
-  model.rewriteEvents();
-  console.log(model.stateTasks.eventsGraphs);
+  // model.rewriteEvents();
+  console.log(model.stateTasks.events);
+
+  const hoursPerCategoryData = model.hoursPerCategory();
+
+  pieView.createNewChart(hoursPerCategoryData, model.stateTasks.categoryColors);
+  doughnutView.createNewChart(
+    hoursPerCategoryData,
+    model.stateTasks.categoryColors
+  );
 };
 
 const controlCategoryColor = function (category) {
-  console.log('hey');
   if (model.stateTasks.categoryColors[category])
     editEventView.changeColor(model.stateTasks.categoryColors[category]);
 };

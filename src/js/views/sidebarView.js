@@ -35,7 +35,7 @@ class SidebarView extends View {
 
   showChartsPage(handler) {
     this._chartsLink.addEventListener('click', () => {
-      // if (!this._sectionCharts.classList.contains('invisible')) return; // sectionCharts is visible
+      if (!this._sectionCharts.classList.contains('invisible')) return; // sectionCharts is visible
       handler();
 
       this._sectionCalendar.classList.add('invisible');
@@ -45,7 +45,7 @@ class SidebarView extends View {
 
   showHomeContent() {
     this._homeLink.addEventListener('click', () => {
-      // if (!this._sectionCalendar.classList.contains('invisible')) return; // sectionCalendar is visible
+      if (!this._sectionCalendar.classList.contains('invisible')) return; // sectionCalendar is visible
 
       this._sectionCalendar.classList.remove('invisible');
       this._sectionCharts.classList.add('invisible');

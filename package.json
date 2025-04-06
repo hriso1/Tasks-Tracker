@@ -15,6 +15,7 @@
     "@fullcalendar/list": "^6.1.15",
     "@fullcalendar/timegrid": "^6.1.15",
     "@material/web": "^2.3.0",
+    "@parcel/transformer-inline-string": "^2.14.4",
     "chart.js": "^4.4.8",
     "core-js": "^3.40.0",
     "parcel": "^2.13.3",

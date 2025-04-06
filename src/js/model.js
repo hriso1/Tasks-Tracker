@@ -467,3 +467,27 @@ export const rewriteEvents = function () {
       : (stateTasks.eventsGraphs[date] = [eventData]);
   });
 };
+
+const timeSpent = function (event) {
+  const startDate = new Date(event.start);
+  const endDate = new Date(event.end);
+
+  const timeDifference = endDate - startDate;
+  const minutes = timeDifference / (1000 * 60);
+  return minutes;
+};
+
+export const hoursPerCategory = function () {
+  const events = stateTasks.events;
+  let categories = {};
+  events.forEach(event => {
+    const minutes = timeSpent(event);
+    const activityCategory = event.activityCategory;
+    if (!categories[activityCategory]) {
+      categories[activityCategory] = minutes;
+    } else {
+      categories[activityCategory] += minutes;
+    }
+  });
+  return categories;
+};

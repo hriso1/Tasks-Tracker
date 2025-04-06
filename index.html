@@ -25,11 +25,11 @@
     <!-- Sidebar  -->
     <!-- Sidebar  -->
  
-    <aside id="sidebar" class="aside-sidebar" >
+    <aside id="sidebar" class="aside-sidebar close" >
         <ul class="list-pages" >
             <li>
                 <span class="logo" ><h4>Todo app</h4></span>
-                <button id="toggle-btn"  >
+                <button id="toggle-btn" class="rotate"  >
                     <!-- <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg> -->
                      <img src="./src/img/arrowback.png" >
                 </button>
@@ -77,6 +77,16 @@
 
     <div class="section-charts invisible" >
 
+      
+        <div class="charts-container" >
+            <div class="chart-wrapper">
+                <canvas id="pieChart"  aria-label="Time spend per category" role="img"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="doughnutChart"  aria-label="Time spend per category" role="img"></canvas>
+            </div>
+          
+        </div>
     </div>
 
 
