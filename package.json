@@ -17,9 +17,12 @@
     "@material/web": "^2.3.0",
     "@parcel/transformer-inline-string": "^2.14.4",
     "chart.js": "^4.4.8",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "chartjs-chart-matrix": "^3.0.0",
     "core-js": "^3.40.0",
     "parcel": "^2.13.3",
-    "regenerator-runtime": "^0.14.1"
+    "regenerator-runtime": "^0.14.1",
+    "utils": "^0.3.1"
   },
   "devDependencies": {
     "svgo": "^3.3.2"

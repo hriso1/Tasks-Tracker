@@ -14,6 +14,8 @@ import pieView from './views/charts/pieView.js';
 import checkIconUrl from '../img/checked.svg';
 import uncheckedIconUrl from '../img/unchecked.svg';
 import doughnutView from './views/charts/doughnutView.js';
+import barView from './views/charts/barView.js';
+// import matrixView from './views/charts/matrixView.js';
 
 ///////////////////////////////////////////////////// Function to get the data about the weather
 
@@ -58,14 +60,15 @@ const rerenderCalendar = function (calendar) {
 
 const controlTask = function (newTask) {
   // 1) Create task in model
-  model.addTask(newTask);
+  const newEvent = model.addTask(newTask);
+  if (newEvent) calendarView.calendar.addEvent(newEvent);
 
   // 2) Render the task in the task list
   const tasks = model.stateTasks.tasks;
   taskListView.render(tasks);
 
   // 3) Rerender the calendar with the newTask or create a newEvent
-  rerenderCalendar(calendarView.calendar);
+  // rerenderCalendar(calendarView.calendar);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -78,7 +81,7 @@ const controlEditEvent = function (newEvent) {
 
   // Rerender calendar with the new event
   rerenderCalendar(calendarView.calendar);
-  taskListView.render(model.stateTasks.tasks);
+  // taskListView.render(model.stateTasks.tasks);
 };
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -223,16 +226,25 @@ const controlSidebar = function () {
 };
 
 const controlContentCharts = function () {
-  // model.rewriteEvents();
-  console.log(model.stateTasks.events);
-
   const hoursPerCategoryData = model.hoursPerCategory();
 
+  // 1) Create pieChart
   pieView.createNewChart(hoursPerCategoryData, model.stateTasks.categoryColors);
-  doughnutView.createNewChart(
-    hoursPerCategoryData,
-    model.stateTasks.categoryColors
+
+  // 2) Create doughnutChart
+  doughnutView.createNewChart(model.checkedAndUnchecked());
+
+  // 3) Create barChart
+
+  barView.createNewChart(
+    model.changeDataForBarChart(
+      model.weeklyHours(),
+      model.stateTasks.categoryColors
+    )
   );
+
+  // 4) Create matrixChart
+  // matrixView.createNewChart();
 };
 
 const controlCategoryColor = function (category) {

@@ -1,36 +1,31 @@
 import Chart, { DoughnutController } from 'chart.js/auto';
 import ChartView from './chartView';
 
-class BarView extends ChartView {
+class DoughnutView extends ChartView {
   _ctx = document.getElementById('doughnutChart');
   _doughnutChart = null;
 
-  createNewChart(data, categoryColors) {
-    const labels = Object.keys(data);
-    const values = Object.values(data);
-
-    const backgroundColor = labels.map(category => categoryColors[category]);
-
-    if (this._pieChart) {
-      this._pieChart.destroy();
+  createNewChart(data) {
+    if (this._doughnutChart) {
+      this._doughnutChart.destroy();
     }
-    this._pieChart = new Chart(this._ctx, {
+    this._doughnutChart = new Chart(this._ctx, {
       type: 'doughnut',
       data: {
         datasets: [
           {
-            data: values,
-            backgroundColor,
+            data: data,
+            backgroundColor: ['green', 'red'],
           },
         ],
 
-        labels: labels,
+        labels: ['Done', 'In progress'],
       },
       options: {
         plugins: {
           title: {
             display: true,
-            text: 'Hours per Category',
+            text: 'Done vs In progress tasks',
           },
           legend: {
             display: false,
@@ -41,4 +36,4 @@ class BarView extends ChartView {
   }
 }
 
-export default new BarView();
+export default new DoughnutView();

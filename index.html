@@ -83,7 +83,13 @@
                 <canvas id="pieChart"  aria-label="Time spend per category" role="img"></canvas>
             </div>
             <div class="chart-wrapper">
-                <canvas id="doughnutChart"  aria-label="Time spend per category" role="img"></canvas>
+                <canvas id="doughnutChart"  aria-label="Done and in progress tasks" role="img"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="barChart"  aria-label="Hours per category for every day of the week" role="img"></canvas>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="matrixChart"  aria-label="Hours per category for every day of the week" role="img"></canvas>
             </div>
           
         </div>
@@ -126,7 +132,7 @@
                 </div>
                 <div class="form-category">
                     <img src="./src/img/categories.png" alt="activity category" >
-                    <input list = 'category-options' name="activityCategory" >
+                    <input list = 'category-options' name="activityCategory" required >
                     <datalist id="category-options" placeholder="task category" >
                         <option value="Important" ></option>
                         <option value="Job" ></option>
@@ -164,7 +170,7 @@
             </div>
             <div class="form-category">
                 <img src="./src/img/categories.png" alt="activity category" >
-                <input list = 'category-options' name="activityCategory" >
+                <input list = 'category-options' name="activityCategory" required>
                 <datalist id="category-options" placeholder="task category" >
                     <option value="Important" ></option>
                     <option value="Job" ></option>
@@ -210,7 +216,7 @@
                 </div>
                 <div class="form-category">
                     <img src="./src/img/categories.png" alt="activity category" >
-                    <input list = 'category-options' name="activityCategory" >
+                    <input list = 'category-options' name="activityCategory" required >
                     <datalist id="category-options" placeholder="task category" >
                         <option value="Important" ></option>
                         <option value="Job" ></option>

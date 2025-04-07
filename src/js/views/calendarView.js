@@ -46,6 +46,8 @@ class CalendarView {
         eventStartEditable: true,
         droppable: true,
         nowIndicator: true,
+        snapDuration: '00:01:00',
+        scrollTime: '08:00:00',
         now: nowUTC.toISOString(),
         // contentHeight: 760,
         // selectable: true,

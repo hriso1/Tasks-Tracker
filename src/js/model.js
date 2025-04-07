@@ -184,7 +184,8 @@ export const addTask = function (newTask) {
   saveTasksToLocalStorage();
 
   // 5) newTask has dates then create event
-  newTask.end && newTask.start && newTask.date && copyTask(task);
+  const event = newTask.end && newTask.start && newTask.date && copyTask(task);
+  if (event) return event;
 };
 
 /////////////////////////////////////////////////// Get all colors from localStorage
@@ -334,6 +335,7 @@ const copyTask = function (task) {
   event.id = crypto.randomUUID();
   stateTasks.events.push(event);
   saveEventsInLocalStorage(stateTasks.events);
+  return event;
 };
 
 /////////////////////////////////////////////////// Creates a new event in the calendar
@@ -468,13 +470,16 @@ export const rewriteEvents = function () {
   });
 };
 
+//////////////////////////////////////////////// Functions for the pie chart data
 const timeSpent = function (event) {
   const startDate = new Date(event.start);
   const endDate = new Date(event.end);
 
   const timeDifference = endDate - startDate;
   const minutes = timeDifference / (1000 * 60);
-  return minutes;
+  const hours = (minutes / 60).toFixed(1);
+
+  return Number(hours);
 };
 
 export const hoursPerCategory = function () {
@@ -483,11 +488,62 @@ export const hoursPerCategory = function () {
   events.forEach(event => {
     const minutes = timeSpent(event);
     const activityCategory = event.activityCategory;
-    if (!categories[activityCategory]) {
+    if (!categories[activityCategory] && activityCategory !== '') {
       categories[activityCategory] = minutes;
     } else {
       categories[activityCategory] += minutes;
     }
   });
   return categories;
+};
+
+export const weeklyHours = function () {
+  const events = stateTasks.events;
+  let categories = {};
+
+  events.forEach(event => {
+    const hours = timeSpent(event);
+    const activityCategory = event.activityCategory;
+
+    if (activityCategory === '') return;
+    if (!categories[activityCategory] && activityCategory !== '') {
+      let data = new Array(7).fill(0);
+      data[indexOfDate(event.date)] += hours;
+      categories[activityCategory] = data;
+    } else {
+      categories[activityCategory][indexOfDate(event.date)] += hours;
+    }
+  });
+  console.log(categories);
+  return categories;
+};
+
+const indexOfDate = function (date) {
+  const dayIndex = new Date(date).getDay();
+  return dayIndex;
+};
+
+//////////////////////////////////////////////// Functions for the doughnut chart data
+
+export const checkedAndUnchecked = function () {
+  let events = stateTasks.events;
+  let unchecked = 0;
+  let checked = 0;
+
+  events.forEach(event => {
+    event.checked ? checked++ : unchecked++;
+  });
+
+  return [checked, unchecked];
+};
+
+////////////////////////////////////////////////
+export const changeDataForBarChart = function (data, categoryColors) {
+  const newData = Object.entries(data).map(([category, arrayValues]) => ({
+    label: category,
+    data: arrayValues,
+    backgroundColor: categoryColors[category] || 'black',
+  }));
+  console.log(newData);
+  return newData;
 };
