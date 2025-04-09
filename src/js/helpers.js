@@ -95,6 +95,8 @@ export const weatherIcons = {
   74: [frostIcon, 'Frost'],
   75: [frostIcon, 'Frost'],
 
+  80: [drizzleIcon, 'Drizzle'],
+
   95: [stormIcon, 'Storm'],
   96: [stormIcon, 'Storm'],
   97: [stormIcon, 'Storm'],

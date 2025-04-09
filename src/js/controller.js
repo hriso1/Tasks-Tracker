@@ -15,6 +15,7 @@ import checkIconUrl from '../img/checked.svg';
 import uncheckedIconUrl from '../img/unchecked.svg';
 import doughnutView from './views/charts/doughnutView.js';
 import barView from './views/charts/barView.js';
+import lineView from './views/charts/lineView.js';
 // import matrixView from './views/charts/matrixView.js';
 
 ///////////////////////////////////////////////////// Function to get the data about the weather
@@ -243,8 +244,8 @@ const controlContentCharts = function () {
     )
   );
 
-  // 4) Create matrixChart
-  // matrixView.createNewChart();
+  // 4) Create lineChart
+  lineView.createNewChart(model.hoursPerDate());
 };
 
 const controlCategoryColor = function (category) {
@@ -297,7 +298,6 @@ const init = function () {
 
 init();
 
-model.rewriteEvents();
 // console.log(model.stateTasks.eventsGraphs);
 
 // let events = {

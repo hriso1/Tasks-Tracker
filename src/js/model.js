@@ -514,7 +514,6 @@ export const weeklyHours = function () {
       categories[activityCategory][indexOfDate(event.date)] += hours;
     }
   });
-  console.log(categories);
   return categories;
 };
 
@@ -544,6 +543,25 @@ export const changeDataForBarChart = function (data, categoryColors) {
     data: arrayValues,
     backgroundColor: categoryColors[category] || 'black',
   }));
-  console.log(newData);
+  console.log('datais', newData);
   return newData;
+};
+
+export const hoursPerDate = function () {
+  let events = stateTasks.events;
+  let dates = {};
+
+  events.forEach(event => {
+    const date = event.date;
+    let hoursSpent = timeSpent(event);
+    dates[date] = dates[date] ? dates[date] + hoursSpent : hoursSpent;
+  });
+  console.log(dates);
+
+  const allDates = Object.keys(dates);
+  const allHours = Object.values(dates);
+
+  console.log(allDates, allHours);
+  return [allDates, allHours];
+  // return dates;
 };
