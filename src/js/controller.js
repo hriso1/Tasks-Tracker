@@ -176,6 +176,7 @@ const controlCalendar = function (calendar) {
       .getEventsFromLocalStorage()
       .filter(e => e.id === eventId)[0];
     editEventView.addHandlerShowDialog(eventDataObject); // get the object of the array
+    console.log(eventDataObject);
   });
 
   calendar.setOption('dateClick', function (info) {

@@ -40,6 +40,34 @@ class EditEventView extends View {
     });
   }
 
+  // _extractTime(dateString) {
+  //   console.log(dateString);
+  //   const date = new Date(dateString); // Convert string to Date object
+  //   console.log(date);
+
+  //   const dateS = String(date).split(' ')[5];
+  //   console.log(dateS);
+  //   const offSetSymbol = dateS[3];
+  //   console.log(offSetSymbol);
+  //   let offSetValue = dateS.slice(4, 6);
+  //   console.log(offSetValue);
+
+  //   offSetValue = offSetValue.startsWith('0') ? offSetValue[1] : offSetValue;
+
+  //   const hoursOffSet =
+  //     offSetSymbol === '+' ? -Number(offSetValue) : Number(offSetValue);
+
+  //   console.log(hoursOffSet);
+
+  //   // Extract hours, minutes, and seconds with leading zeros
+
+  //   const hours = String(date.getHours() + hoursOffSet).padStart(2, '0');
+  //   const minutes = String(date.getMinutes()).padStart(2, '0');
+  //   const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  //   return `${hours}:${minutes}:${seconds}`;
+  // }
+
   _extractTime(dateString) {
     const date = new Date(dateString); // Convert string to Date object
 
@@ -47,15 +75,17 @@ class EditEventView extends View {
     const offSetSymbol = dateS[3];
     let offSetValue = dateS.slice(4, 6);
 
-    offSetValue = offSetValue.startsWith('0') ? offSetValue[1] : offSetValue;
     const hoursOffSet =
       offSetSymbol === '+' ? -Number(offSetValue) : Number(offSetValue);
 
+    const correctDate = new Date(date);
+    correctDate.setTime(date.getTime() + hoursOffSet * 60 * 60 * 1000);
+
     // Extract hours, minutes, and seconds with leading zeros
 
-    const hours = String(date.getHours() + hoursOffSet).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const hours = String(correctDate.getHours()).padStart(2, '0');
+    const minutes = String(correctDate.getMinutes()).padStart(2, '0');
+    const seconds = String(correctDate.getSeconds()).padStart(2, '0');
 
     return `${hours}:${minutes}:${seconds}`;
   }
