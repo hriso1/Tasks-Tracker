@@ -416,12 +416,6 @@ li img{
 
 /* Scrollbar*/
 
-.fc-scrollgrid-section .fc-scroller::-webkit-scrollbar{
-    /* display: none; */
-}
-
-
-
 .right-main{
     grid-area: right-side;
     /* background-color: lightcoral; */
