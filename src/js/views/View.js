@@ -14,6 +14,21 @@ export default class View {
     this._parentElement.innerHTML = '';
   }
 
+  changeColorBasedOnCategory(handler) {
+    this._categoryElement.addEventListener('change', event => {
+      const category = event.target.value;
+      handler(category);
+    });
+
+    this._categoryElement.addEventListener('focus', event => {
+      event.target.value = '';
+    });
+  }
+
+  changeColor(color) {
+    this._colorElement.value = color;
+  }
+
   renderLoading() {
     const markup = `
         <div class="loading" >

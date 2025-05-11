@@ -16,6 +16,7 @@ import uncheckedIconUrl from '../img/unchecked.svg';
 import doughnutView from './views/charts/doughnutView.js';
 import barView from './views/charts/barView.js';
 import lineView from './views/charts/lineView.js';
+import { color } from 'chart.js/helpers';
 // import matrixView from './views/charts/matrixView.js';
 
 ///////////////////////////////////////////////////// Function to get the data about the weather
@@ -82,7 +83,7 @@ const controlEditEvent = function (newEvent) {
 
   // Rerender calendar with the new event
   rerenderCalendar(calendarView.calendar);
-  // taskListView.render(model.stateTasks.tasks);
+  taskListView.render(model.stateTasks.tasks);
 };
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -249,9 +250,31 @@ const controlContentCharts = function () {
   lineView.createNewChart(model.hoursPerDate());
 };
 
-const controlCategoryColor = function (category) {
-  if (model.stateTasks.categoryColors[category])
+const controlCategoryColorEditEvent = function (category) {
+  console.log('merge');
+  if (model.stateTasks.categoryColors[category]) {
+    console.log('merge');
+
     editEventView.changeColor(model.stateTasks.categoryColors[category]);
+  }
+};
+
+const controlCategoryColorNewEvent = function (category) {
+  console.log('merge');
+  if (model.stateTasks.categoryColors[category]) {
+    console.log('merge');
+
+    addTaskView.changeColor(model.stateTasks.categoryColors[category]);
+  }
+};
+
+const controlCategoryColorEditTask = function (category) {
+  console.log('merge');
+  if (model.stateTasks.categoryColors[category]) {
+    console.log('merge');
+
+    editTaskView.changeColor(model.stateTasks.categoryColors[category]);
+  }
 };
 
 const init = function () {
@@ -274,7 +297,9 @@ const init = function () {
   editEventView.addHandlerDeleteEvent(controlDeleteEvent);
 
   // 2.2) Listen for category change
-  editEventView.changeColorBasedOnCategory(controlCategoryColor);
+  editEventView.changeColorBasedOnCategory(controlCategoryColorEditEvent);
+  addTaskView.changeColorBasedOnCategory(controlCategoryColorNewEvent);
+  editTaskView.changeColorBasedOnCategory(controlCategoryColorEditTask);
 
   // 3) Create new calendar with events
   calendarView.addCalendar(controlCalendar, model.getEventsFromLocalStorage());
@@ -298,8 +323,6 @@ const init = function () {
 };
 
 init();
-
-// console.log(model.stateTasks.eventsGraphs);
 
 // let events = {
 //   '1-04-2025': [

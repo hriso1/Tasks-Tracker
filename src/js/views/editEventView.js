@@ -1,4 +1,6 @@
 import View from './View';
+import uncheckedIcon from '../../img/unchecked.svg';
+import checkedIcon from '../../img/checked.svg';
 
 class EditEventView extends View {
   _parentElement = document.querySelector('.form-edit-event');
@@ -11,6 +13,7 @@ class EditEventView extends View {
     "[name='activityCategory']"
   );
   _colorElement = this._parentElement.querySelector("[name='categoryColor']");
+  _imgProgress = document.querySelector('.progress-img');
 
   constructor() {
     super();
@@ -19,24 +22,13 @@ class EditEventView extends View {
     this._checkEventCompleted();
   }
 
-  changeColorBasedOnCategory(handler) {
-    this._categoryElement.addEventListener('change', event => {
-      const category = event.target.value;
-      handler(category);
-    });
-
-    this._categoryElement.addEventListener('focus', event => {
-      event.target.value = '';
-    });
-  }
-
-  changeColor(color) {
-    this._colorElement.value = color;
-  }
-
   _checkEventCompleted() {
     this._checkBox.addEventListener('change', () => {
       this._label.textContent = this._checkBox.checked ? 'Done' : 'In progress';
+      this._imgProgress.src = this._checkBox.checked
+        ? checkedIcon
+        : uncheckedIcon;
+      console.log(this._imgProgress.src);
     });
   }
 
@@ -69,8 +61,9 @@ class EditEventView extends View {
   // }
 
   _extractTime(dateString) {
+    console.log(dateString);
     const date = new Date(dateString); // Convert string to Date object
-
+    console.log(date.getTimezoneOffset());
     const dateS = String(date).split(' ')[5];
     const offSetSymbol = dateS[3];
     let offSetValue = dateS.slice(4, 6);
@@ -78,6 +71,7 @@ class EditEventView extends View {
     const hoursOffSet =
       offSetSymbol === '+' ? -Number(offSetValue) : Number(offSetValue);
 
+    console.log(hoursOffSet);
     const correctDate = new Date(date);
     correctDate.setTime(date.getTime() + hoursOffSet * 60 * 60 * 1000);
 
@@ -110,8 +104,10 @@ class EditEventView extends View {
       eventData.categoryColor || '';
     this._parentElement.querySelector("[name='checked']").checked =
       eventData.checked || '';
+    this._imgProgress.src = eventData.checked ? checkedIcon : uncheckedIcon;
     this._parentElement.querySelector('.checkbox-label').textContent =
       eventData.checked ? 'Done' : 'In progress';
+
     this._dialogElement.showModal();
   }
 

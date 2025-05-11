@@ -60,7 +60,7 @@
     <div class="section-calendar" >
         <div class="left-main" >
             <div>
-                <button class="open-form" >Open form</button>
+                <button class="open-form" ><span>New task</span></button>
                 <div class="tasks-list" >
                     
                 </div>
@@ -82,12 +82,19 @@
       
         <div class="charts-container" >
             <div class="chart-wrapper">
+        
                 <canvas id="pieChart"  aria-label="Time spend per category" role="img"></canvas>
             </div>
             <div class="chart-wrapper">
                 <canvas id="doughnutChart"  aria-label="Done and in progress tasks" role="img"></canvas>
             </div>
             <div class="chart-wrapper">
+                <div class="chart-range-wrapper" >
+                    <label for="start-pieChart" >From</label>
+                    <input type="date" class="start-pieChart" >
+                    <label for="end-pieChart" >to</label>
+                    <input type="date" class="end-pieChart" >
+                </div>
                 <canvas id="barChart"  aria-label="Hours per category for every day of the week" role="img"></canvas>
             </div>
             <div class="chart-wrapper">
@@ -150,7 +157,7 @@
                     <input type="color" name="categoryColor" value="#ff00ff" >
                 </div>
             </div>
-            <button class="btn create-task" >Create task</button>
+            <button class="btn change-form" ><span>Create task</span></button>
         </form>
     </dialog>
 
@@ -188,7 +195,8 @@
                 <input type="color" name="categoryColor" value="#ff00ff" >
             </div>
         </div>
-        <button class="btn edit-task" >Edit task</button>
+        <button class="btn change-form" ><span>Edit Task</span></button>
+
     </form>
 </dialog>
 
@@ -233,13 +241,17 @@
                     <div style="font-size: 0.8em;" >category color</div>
                     <input type="color" name="categoryColor" value="#ff00ff" >
                 </div>
-                <div>
+                <div class="form-check" >
+                    <label for="check-event">
+                        <img src="./src/img/unchecked.svg" alt="check image" class=" progress-img" >
+                    </label> 
                     <input id="check-event" type="checkbox" class="checkbox" name="checked"  />
                     <label for="check-event" class="checkbox-label" >In progress</label>
                 </div>
 
             </div>
-            <button class="btn create-task" >Apply changes</button>
+        <button class="btn change-form" ><span>Edit Task</span></button>
+
         </form>
 
         

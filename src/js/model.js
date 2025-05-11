@@ -488,10 +488,10 @@ export const hoursPerCategory = function () {
   events.forEach(event => {
     const minutes = timeSpent(event);
     const activityCategory = event.activityCategory;
-    if (!categories[activityCategory] && activityCategory !== '') {
-      categories[activityCategory] = minutes;
-    } else {
-      categories[activityCategory] += minutes;
+
+    if (categories[activityCategory] !== '') {
+      categories[activityCategory] =
+        (categories[activityCategory] || 0) + minutes;
     }
   });
   return categories;

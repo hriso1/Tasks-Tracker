@@ -5,6 +5,10 @@ class EditTaskView extends View {
   _dialogElement = document.querySelector('.dialog-edit-task');
   _closeDialogButton = document.querySelector('.close-edit-task');
   _deleteButton = document.querySelector('.delete-edit-task');
+  _categoryElement = this._parentElement.querySelector(
+    "[name='activityCategory']"
+  );
+  _colorElement = this._parentElement.querySelector("[name='categoryColor']");
 
   constructor() {
     super();

@@ -6,6 +6,10 @@ class AddTaskView extends View {
   _dialogElement = document.querySelector('.dialog-add-task');
   _openDialogButton = document.querySelector('.open-form');
   _closeDialogButton = document.querySelector('.close-task');
+  _categoryElement = this._parentElement.querySelector(
+    "[name='activityCategory']"
+  );
+  _colorElement = this._parentElement.querySelector("[name='categoryColor']");
 
   constructor() {
     super();
