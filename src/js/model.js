@@ -17,6 +17,11 @@ export const stateTasks = {
   lastColorPicked: '',
   eventsGraphs: {},
   categoryColors: {},
+  pieEvents: [],
+  pieInputs: {
+    start: '',
+    end: '',
+  },
 };
 
 const createWeatherObject = function (data) {
@@ -482,8 +487,49 @@ const timeSpent = function (event) {
   return Number(hours);
 };
 
-export const hoursPerCategory = function () {
-  const events = stateTasks.events;
+function getDateRange(events) {
+  if (!events || events.length === 0) return { earliest: null, latest: null };
+
+  let earliest = new Date(events[0].date);
+  let latest = new Date(events[0].date);
+
+  events.forEach(event => {
+    const eventDate = new Date(event.date);
+    if (eventDate < earliest) earliest = eventDate;
+    if (eventDate > latest) latest = eventDate;
+  });
+  console.log('----------------------');
+  console.log(earliest, latest);
+
+  return {
+    earliest,
+    latest,
+  };
+}
+
+export const hoursPerCategory = function (date, dateString) {
+  let events;
+  stateTasks.pieEvents = stateTasks.events;
+  if (date && dateString) {
+    events = stateTasks.pieEvents.filter(event => {
+      if (dateString === 'end') {
+        const eventDate = new Date(event.date);
+        console.log(eventDate);
+        return eventDate <= new Date(date);
+      }
+
+      if (dateString === 'start') {
+        const eventDate = new Date(event.date);
+        return eventDate >= new Date(date);
+      }
+    });
+  } else {
+    console.log('sunt in else');
+    events = stateTasks.events;
+  }
+  if (state) stateTasks.pieEvents = events;
+
+  // filtreaza evenimentele in functie de start si end date
   let categories = {};
   events.forEach(event => {
     const minutes = timeSpent(event);
@@ -494,7 +540,15 @@ export const hoursPerCategory = function () {
         (categories[activityCategory] || 0) + minutes;
     }
   });
-  return categories;
+
+  const dates = {};
+  if (!date) {
+    const { earliest, latest } = getDateRange(events);
+    dates.earliestDate = earliest;
+    dates.latestDate = latest;
+  }
+
+  return [categories, dates];
 };
 
 export const weeklyHours = function () {
@@ -543,7 +597,6 @@ export const changeDataForBarChart = function (data, categoryColors) {
     data: arrayValues,
     backgroundColor: categoryColors[category] || 'black',
   }));
-  console.log('datais', newData);
   return newData;
 };
 
@@ -556,12 +609,10 @@ export const hoursPerDate = function () {
     let hoursSpent = timeSpent(event);
     dates[date] = dates[date] ? dates[date] + hoursSpent : hoursSpent;
   });
-  console.log(dates);
 
   const allDates = Object.keys(dates);
   const allHours = Object.values(dates);
 
-  console.log(allDates, allHours);
   return [allDates, allHours];
   // return dates;
 };

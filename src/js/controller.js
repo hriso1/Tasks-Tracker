@@ -124,7 +124,9 @@ const controlDeleteTask = function (taskId) {
   model.deleteTask(taskId);
 
   // 2) Rerender the new list
-  taskListView.render(model.stateTasks.tasks);
+  // taskListView.render(model.stateTasks.tasks);
+  // its better to just remove the node element from the list instead of rerendering
+  // the entire list again
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -228,6 +230,18 @@ const controlSidebar = function () {
   sidebarView.showHomeContent();
 };
 
+const controlPieChart = function (date, dateString) {
+  console.log(date, dateString);
+  const hoursPerCategoryData = model.hoursPerCategory(date, dateString);
+  console.log(hoursPerCategoryData);
+  pieView.createNewChart(hoursPerCategoryData, model.stateTasks.categoryColors);
+};
+
+const controlDateCharts = function () {
+  pieView.addHandlerStartPie(controlPieChart);
+  pieView.addHandlerEndPie(controlPieChart);
+};
+
 const controlContentCharts = function () {
   const hoursPerCategoryData = model.hoursPerCategory();
 
@@ -320,6 +334,7 @@ const init = function () {
 
   // 9) Show charts page
   sidebarView.showChartsPage(controlContentCharts);
+  controlDateCharts();
 };
 
 init();

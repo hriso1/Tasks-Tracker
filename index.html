@@ -82,15 +82,28 @@
       
         <div class="charts-container" >
             <div class="chart-wrapper">
-        
+                <div class="date-inputs">
+                    <div class="input-wrapper">
+                        <label for="startPie">Start</label>
+                        <input id="startPie" type="date" class="startDate" />
+                    </div>
+
+                    <div class="input-wrapper">
+                        <label for="endPie" >End</label>
+                        <input id="endPie" type="date" class="endDate"   />
+                    </div>
+                </div>
                 <canvas id="pieChart"  aria-label="Time spend per category" role="img"></canvas>
             </div>
+
             <div class="chart-wrapper">
                 <canvas id="doughnutChart"  aria-label="Done and in progress tasks" role="img"></canvas>
             </div>
+
             <div class="chart-wrapper">
                 <canvas id="barChart"  aria-label="Hours per category for every day of the week" role="img"></canvas>
             </div>
+
             <div class="chart-wrapper">
                 <canvas id="lineChart"  aria-label="Hours per category for every day of the week" role="img"></canvas>
             </div>

@@ -18,6 +18,7 @@ class TaskListView extends View {
         event.stopPropagation();
         const taskId = targetedTask.getAttribute('data-id');
         handler(taskId);
+        targetedTask.remove();
       }
     });
   }

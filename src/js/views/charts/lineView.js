@@ -9,7 +9,6 @@ class LineView extends ChartView {
     if (this._lineChart) {
       this._lineChart.destroy();
     }
-    console.log(labels, data);
 
     this._lineChart = new Chart(this._ctx, {
       type: 'line',
