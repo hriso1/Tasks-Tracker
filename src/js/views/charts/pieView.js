@@ -7,28 +7,24 @@ class BarView extends ChartView {
   _startDate = document.getElementById('startPie');
   _endDate = document.getElementById('endPie');
 
-  _formatDateForInput(date) {
-    return date.toISOString().split('T')[0];
-  }
+  // _formatDateForInput(date) {
+  //   return date.toISOString().split('T')[0];
+  // }
 
-  addHandlerStartPie(handler) {
-    this._startDate.addEventListener('change', () => {
-      console.log(this._startDate);
-      handler(this._startDate.value, 'start');
-    });
-  }
+  // addHandlerStartPie(handler) {
+  //   this._startDate.addEventListener('change', () => {
+  //     handler(this._startDate.value, 'start');
+  //   });
+  // }
 
-  addHandlerEndPie(handler) {
-    this._endDate.addEventListener('change', () => {
-      console.log(this._endDate.value);
-      handler(this._endDate.value, 'end');
-    });
-  }
+  // addHandlerEndPie(handler) {
+  //   this._endDate.addEventListener('change', () => {
+  //     handler(this._endDate.value, 'end');
+  //   });
+  // }
 
   createNewChart(data, categoryColors) {
     // Aici sa ai in date, start date si end date ca sa il pui in inputuri
-    console.log('**********');
-    console.log(data[1]);
 
     if (data[1]?.earliestDate && data[1]?.latestDate) {
       this._startDate.value = this._formatDateForInput(data[1].earliestDate);

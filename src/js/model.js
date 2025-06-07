@@ -476,7 +476,7 @@ export const rewriteEvents = function () {
 };
 
 //////////////////////////////////////////////// Functions for the pie chart data
-const timeSpent = function (event) {
+const timeSpentHours = function (event) {
   const startDate = new Date(event.start);
   const endDate = new Date(event.end);
 
@@ -507,14 +507,22 @@ function getDateRange(events) {
   };
 }
 
-export const hoursPerCategory = function (date, dateString) {
+const checkIfThereIsADate = function (date, events) {
+  const dates = {};
+  if (!date) {
+    const { earliest, latest } = getDateRange(events);
+    dates.earliestDate = earliest;
+    dates.latestDate = latest;
+  }
+  return dates;
+};
+
+const filterDatesAfterInputRange = function (date, dateString) {
   let events;
-  stateTasks.pieEvents = stateTasks.events;
   if (date && dateString) {
-    events = stateTasks.pieEvents.filter(event => {
+    events = stateTasks.events.filter(event => {
       if (dateString === 'end') {
         const eventDate = new Date(event.date);
-        console.log(eventDate);
         return eventDate <= new Date(date);
       }
 
@@ -524,15 +532,18 @@ export const hoursPerCategory = function (date, dateString) {
       }
     });
   } else {
-    console.log('sunt in else');
     events = stateTasks.events;
   }
-  if (state) stateTasks.pieEvents = events;
+  return events;
+};
 
-  // filtreaza evenimentele in functie de start si end date
+export const hoursPerCategory = function (dateValue, dateString) {
+  /// in caz de start sau end nu sunt valabile trimite un warning
+
+  const events = filterDatesAfterInputRange(dateValue, dateString);
   let categories = {};
   events.forEach(event => {
-    const minutes = timeSpent(event);
+    const minutes = timeSpentHours(event);
     const activityCategory = event.activityCategory;
 
     if (categories[activityCategory] !== '') {
@@ -541,22 +552,63 @@ export const hoursPerCategory = function (date, dateString) {
     }
   });
 
-  const dates = {};
-  if (!date) {
-    const { earliest, latest } = getDateRange(events);
-    dates.earliestDate = earliest;
-    dates.latestDate = latest;
-  }
+  const dates = checkIfThereIsADate(dateValue, events);
 
   return [categories, dates];
 };
 
-export const weeklyHours = function () {
-  const events = stateTasks.events;
+const indexOfDate = function (date) {
+  const dayIndex = new Date(date).getDay();
+  return dayIndex;
+};
+
+//////////////////////////////////////////////// Functions for the doughnut chart data
+
+export const checkedAndUnchecked = function (dateValue, dateString) {
+  const events = filterDatesAfterInputRange(dateValue, dateString);
+  let unchecked = 0;
+  let checked = 0;
+
+  events.forEach(event => {
+    event.checked ? checked++ : unchecked++;
+  });
+
+  const dates = checkIfThereIsADate(dateValue, events);
+
+  return [checked, unchecked, dates];
+};
+
+const weeklyHours = function (dateValue, dateString) {
+  let events;
+  let dates = {};
+
+  if (dateValue) events = filterDatesAfterInputRange(dateValue, dateString);
+
+  if (!dateValue) {
+    const now = new Date();
+
+    const startDateWeek = new Date(now);
+    startDateWeek.setDate(now.getDate() - now.getDay());
+    startDateWeek.setHours(0, 0, 0, 0);
+
+    const endDateWeek = new Date(now);
+    endDateWeek.setDate(now.getDate() + (6 - now.getDay()));
+    endDateWeek.setHours(23, 59, 59, 999);
+
+    dates.earliestDate = startDateWeek;
+    dates.latestDate = endDateWeek;
+
+    events = stateTasks.events.filter(event => {
+      const newEvent = new Date(event.date);
+      return newEvent >= startDateWeek && newEvent <= endDateWeek;
+    });
+    console.log(events);
+  }
+
   let categories = {};
 
   events.forEach(event => {
-    const hours = timeSpent(event);
+    const hours = timeSpentHours(event);
     const activityCategory = event.activityCategory;
 
     if (activityCategory === '') return;
@@ -568,36 +620,24 @@ export const weeklyHours = function () {
       categories[activityCategory][indexOfDate(event.date)] += hours;
     }
   });
-  return categories;
-};
+  // const dates = checkIfThereIsADate(dateValue, events);
 
-const indexOfDate = function (date) {
-  const dayIndex = new Date(date).getDay();
-  return dayIndex;
-};
-
-//////////////////////////////////////////////// Functions for the doughnut chart data
-
-export const checkedAndUnchecked = function () {
-  let events = stateTasks.events;
-  let unchecked = 0;
-  let checked = 0;
-
-  events.forEach(event => {
-    event.checked ? checked++ : unchecked++;
-  });
-
-  return [checked, unchecked];
+  return [categories, dates];
 };
 
 ////////////////////////////////////////////////
-export const changeDataForBarChart = function (data, categoryColors) {
-  const newData = Object.entries(data).map(([category, arrayValues]) => ({
-    label: category,
-    data: arrayValues,
-    backgroundColor: categoryColors[category] || 'black',
-  }));
-  return newData;
+export const changeDataForBarChart = function (dateValue, dateString) {
+  const hourCategoryPerWeek = weeklyHours(dateValue, dateString);
+  let categoryColors = stateTasks.categoryColors;
+  const newData = Object.entries(hourCategoryPerWeek[0]).map(
+    ([category, arrayValues]) => ({
+      label: category,
+      data: arrayValues,
+      backgroundColor: categoryColors[category] || 'black',
+    })
+  );
+  console.log(newData);
+  return [newData, hourCategoryPerWeek[1]];
 };
 
 export const hoursPerDate = function () {
@@ -606,7 +646,7 @@ export const hoursPerDate = function () {
 
   events.forEach(event => {
     const date = event.date;
-    let hoursSpent = timeSpent(event);
+    let hoursSpent = timeSpentHours(event);
     dates[date] = dates[date] ? dates[date] + hoursSpent : hoursSpent;
   });
 

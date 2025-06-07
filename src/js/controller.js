@@ -230,16 +230,29 @@ const controlSidebar = function () {
   sidebarView.showHomeContent();
 };
 
-const controlPieChart = function (date, dateString) {
-  console.log(date, dateString);
-  const hoursPerCategoryData = model.hoursPerCategory(date, dateString);
-  console.log(hoursPerCategoryData);
+////////////////////// Code for pie Charts
+const controlPieChart = function (dateValue, dateString) {
+  const hoursPerCategoryData = model.hoursPerCategory(dateValue, dateString);
   pieView.createNewChart(hoursPerCategoryData, model.stateTasks.categoryColors);
+};
+
+const controlDoughnutChart = function (dateValue, dateString) {
+  const checkDataAndDates = model.checkedAndUnchecked(dateValue, dateString);
+  doughnutView.createNewChart(checkDataAndDates);
+};
+
+const controlBarChart = function (dateValue, dateString) {
+  const data = model.changeDataForBarChart(dateValue, dateString);
+  barView.createNewChart(data);
 };
 
 const controlDateCharts = function () {
   pieView.addHandlerStartPie(controlPieChart);
   pieView.addHandlerEndPie(controlPieChart);
+  doughnutView.addHandlerStartPie(controlDoughnutChart);
+  doughnutView.addHandlerEndPie(controlDoughnutChart);
+  barView.addHandlerStartPie(controlBarChart);
+  barView.addHandlerEndPie(controlBarChart);
 };
 
 const controlContentCharts = function () {
@@ -253,12 +266,7 @@ const controlContentCharts = function () {
 
   // 3) Create barChart
 
-  barView.createNewChart(
-    model.changeDataForBarChart(
-      model.weeklyHours(),
-      model.stateTasks.categoryColors
-    )
-  );
+  barView.createNewChart(model.changeDataForBarChart());
 
   // 4) Create lineChart
   lineView.createNewChart(model.hoursPerDate());

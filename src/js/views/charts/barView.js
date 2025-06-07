@@ -5,15 +5,27 @@ class BarView extends ChartView {
   _ctx = document.getElementById('barChart');
   _barChart = null;
 
+  _startDate = document.getElementById('startBar');
+  _endDate = document.getElementById('endBar');
+
   createNewChart(data) {
+    const weeklyHoursAndCatrgory = data[0];
+
+    if (data[1]?.earliestDate && data[1]?.latestDate) {
+      console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&');
+      console.log(data[1]);
+      this._startDate.value = this._formatDateForInput(data[1].earliestDate);
+      this._endDate.value = this._formatDateForInput(data[1].latestDate);
+    }
+
     if (this._barChart) {
       this._barChart.destroy();
     }
     this._barChart = new Chart(this._ctx, {
       type: 'bar',
       data: {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: data,
+        labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        datasets: weeklyHoursAndCatrgory,
       },
       options: {
         plugins: {

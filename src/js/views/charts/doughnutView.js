@@ -4,8 +4,19 @@ import ChartView from './chartView';
 class DoughnutView extends ChartView {
   _ctx = document.getElementById('doughnutChart');
   _doughnutChart = null;
+  _startDate = document.getElementById('startDoughnut');
+  _endDate = document.getElementById('endDoughnut');
 
   createNewChart(data) {
+    const chartData = [data[0], data[1]];
+
+    if (data[2]?.earliestDate && data[2]?.latestDate) {
+      console.log('8888888888888888888888');
+      console.log(data[2]);
+      this._startDate.value = this._formatDateForInput(data[2].earliestDate);
+      this._endDate.value = this._formatDateForInput(data[2].latestDate);
+    }
+
     if (this._doughnutChart) {
       this._doughnutChart.destroy();
     }
@@ -14,7 +25,7 @@ class DoughnutView extends ChartView {
       data: {
         datasets: [
           {
-            data: data,
+            data: chartData,
             backgroundColor: ['green', 'red'],
           },
         ],
