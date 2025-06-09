@@ -1,5 +1,5 @@
 import View from './View.js';
-import deleteIcon from '../../img/bin.png';
+import deleteIcon from '../../../img/bin.png';
 
 class TaskListView extends View {
   _data;

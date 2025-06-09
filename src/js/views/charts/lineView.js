@@ -4,6 +4,8 @@ import ChartView from './chartView';
 class LineView extends ChartView {
   _ctx = document.getElementById('lineChart');
   _lineChart = null;
+  _startDate = document.getElementById('startLine');
+  _endDate = document.getElementById('endLine');
 
   createNewChart([labels, data]) {
     if (this._lineChart) {

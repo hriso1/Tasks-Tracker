@@ -1,6 +1,6 @@
 import View from './View';
-import uncheckedIcon from '../../img/unchecked.svg';
-import checkedIcon from '../../img/checked.svg';
+import uncheckedIcon from '../../../img/unchecked.svg';
+import checkedIcon from '../../../img/checked.svg';
 
 class EditEventView extends View {
   _parentElement = document.querySelector('.form-edit-event');

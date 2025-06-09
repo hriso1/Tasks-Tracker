@@ -12,8 +12,6 @@ class BarView extends ChartView {
     const weeklyHoursAndCatrgory = data[0];
 
     if (data[1]?.earliestDate && data[1]?.latestDate) {
-      console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&');
-      console.log(data[1]);
       this._startDate.value = this._formatDateForInput(data[1].earliestDate);
       this._endDate.value = this._formatDateForInput(data[1].latestDate);
     }

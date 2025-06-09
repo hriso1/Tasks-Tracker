@@ -1,15 +1,15 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
 import * as model from './model.js';
-import weatherView from './views/weatherView.js';
-import quotesView from './views/quotesView.js';
-import addTaskView from './views/addTaskView.js';
-import taskListView from './views/taskListView.js';
-import calendarView from './views/calendarView.js';
-import editEventView from './views/editEventView.js';
+import weatherView from './views/otherViews/weatherView.js';
+import quotesView from './views/otherViews/quotesView.js';
+import addTaskView from './views/otherViews/addTaskView.js';
+import taskListView from './views/otherViews/taskListView.js';
+import calendarView from './views/otherViews/calendarView.js';
+import editEventView from './views/otherViews/editEventView.js';
 import { hoursConstraint } from './helpers.js';
-import editTaskView from './views/editTaskView.js';
-import sidebarView from './views/sidebarView.js';
+import editTaskView from './views/otherViews/editTaskView.js';
+import sidebarView from './views/otherViews/sidebarView.js';
 import pieView from './views/charts/pieView.js';
 import checkIconUrl from '../img/checked.svg';
 import uncheckedIconUrl from '../img/unchecked.svg';
@@ -231,19 +231,24 @@ const controlSidebar = function () {
 };
 
 ////////////////////// Code for pie Charts
-const controlPieChart = function (dateValue, dateString) {
-  const hoursPerCategoryData = model.hoursPerCategory(dateValue, dateString);
+const controlPieChart = function (startDate, endDate) {
+  const hoursPerCategoryData = model.hoursPerCategory(startDate, endDate);
   pieView.createNewChart(hoursPerCategoryData, model.stateTasks.categoryColors);
 };
 
-const controlDoughnutChart = function (dateValue, dateString) {
-  const checkDataAndDates = model.checkedAndUnchecked(dateValue, dateString);
+const controlDoughnutChart = function (startDate, endDate) {
+  const checkDataAndDates = model.checkedAndUnchecked(startDate, endDate);
   doughnutView.createNewChart(checkDataAndDates);
 };
 
-const controlBarChart = function (dateValue, dateString) {
-  const data = model.changeDataForBarChart(dateValue, dateString);
+const controlBarChart = function (startDate, endDate) {
+  const data = model.changeDataForBarChart(startDate, endDate);
   barView.createNewChart(data);
+};
+
+const controlLineChart = function (startDate, endDate) {
+  const data = model.hoursPerDate(startDate, endDate);
+  lineView.createNewChart(data);
 };
 
 const controlDateCharts = function () {
@@ -253,6 +258,8 @@ const controlDateCharts = function () {
   doughnutView.addHandlerEndPie(controlDoughnutChart);
   barView.addHandlerStartPie(controlBarChart);
   barView.addHandlerEndPie(controlBarChart);
+  lineView.addHandlerStartPie(controlLineChart);
+  lineView.addHandlerEndPie(controlLineChart);
 };
 
 const controlContentCharts = function () {

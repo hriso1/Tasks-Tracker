@@ -1,5 +1,5 @@
 import View from './View.js';
-import loadingIcon from '../../img/loading.png';
+import loadingIcon from '../../../img/loading.png';
 
 class WeatherView extends View {
   _parentElement = document.querySelector('.weatherData-container');

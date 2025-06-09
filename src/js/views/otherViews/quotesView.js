@@ -1,5 +1,5 @@
 import View from './View.js';
-import { motivationQuotes } from '../helpers.js';
+import { motivationQuotes } from '../../helpers.js';
 /*
     fa o functie care sa aleaga aleatorie un item din motivational object
     _generateMarkrup si folosesti functia ca sa aleaga un numar aleatoriu

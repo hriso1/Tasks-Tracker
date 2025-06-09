@@ -7,14 +7,11 @@ class DoughnutView extends ChartView {
   _startDate = document.getElementById('startDoughnut');
   _endDate = document.getElementById('endDoughnut');
 
-  createNewChart(data) {
-    const chartData = [data[0], data[1]];
-
-    if (data[2]?.earliestDate && data[2]?.latestDate) {
-      console.log('8888888888888888888888');
-      console.log(data[2]);
-      this._startDate.value = this._formatDateForInput(data[2].earliestDate);
-      this._endDate.value = this._formatDateForInput(data[2].latestDate);
+  createNewChart([data1, data2, dates]) {
+    const data = [data1, data2];
+    if (dates?.earliestDate && dates?.latestDate) {
+      this._startDate.value = this._formatDateForInput(dates.earliestDate);
+      this._endDate.value = this._formatDateForInput(dates.latestDate);
     }
 
     if (this._doughnutChart) {
@@ -25,7 +22,7 @@ class DoughnutView extends ChartView {
       data: {
         datasets: [
           {
-            data: chartData,
+            data: data,
             backgroundColor: ['green', 'red'],
           },
         ],

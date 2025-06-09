@@ -1,4 +1,4 @@
-import loadingIcon from '../../img/loading.png';
+import loadingIcon from '../../../img/loading.png';
 
 export default class View {
   _data;
