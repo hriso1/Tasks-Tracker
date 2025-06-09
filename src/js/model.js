@@ -565,6 +565,7 @@ export const checkedAndUnchecked = function (startDate, endDate) {
     event.checked ? checked++ : unchecked++;
   });
 
+  // Daca nu sunt date inca propuse atunci se trimite din events cea mai apropiata si indeprtata zi
   const dates = checkIfThereIsADate(startDate, endDate, events);
 
   return [checked, unchecked, dates];
@@ -619,8 +620,8 @@ const weeklyHours = function (startDate, endDate) {
 };
 
 ////////////////////////////////////////////////
-export const changeDataForBarChart = function (dateValue, dateString) {
-  const hourCategoryPerWeek = weeklyHours(dateValue, dateString);
+export const changeDataForBarChart = function (startDate, endDate) {
+  const hourCategoryPerWeek = weeklyHours(startDate, endDate);
   let categoryColors = stateTasks.categoryColors;
   const newData = Object.entries(hourCategoryPerWeek[0]).map(
     ([category, arrayValues]) => ({
@@ -632,8 +633,8 @@ export const changeDataForBarChart = function (dateValue, dateString) {
   return [newData, hourCategoryPerWeek[1]];
 };
 
-export const hoursPerDate = function (dateValue, dateString) {
-  const events = filterDatesAfterInputRange(dateValue, dateString);
+export const hoursPerDate = function (startDate, endDate) {
+  const events = filterDatesAfterInputRange(startDate, endDate);
 
   let dates = {};
 
@@ -643,9 +644,17 @@ export const hoursPerDate = function (dateValue, dateString) {
     dates[date] = dates[date] ? dates[date] + hoursSpent : hoursSpent;
   });
 
-  const allDates = Object.keys(dates);
-  const allHours = Object.values(dates);
+  const sortedEntries = Object.entries(dates).sort(
+    ([dateA], [dateB]) => new Date(dateA) - new Date(dateB)
+  );
 
-  return [allDates, allHours];
+  const allDates = sortedEntries.map(([date]) => date);
+  const allHours = sortedEntries.map(([, hours]) => hours);
+
+  console.log(dates);
+
+  const firstAndLastDates = checkIfThereIsADate(startDate, endDate, events);
+
+  return [allDates, allHours, firstAndLastDates];
   // return dates;
 };

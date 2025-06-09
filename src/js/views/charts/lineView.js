@@ -7,19 +7,31 @@ class LineView extends ChartView {
   _startDate = document.getElementById('startLine');
   _endDate = document.getElementById('endLine');
 
-  createNewChart([labels, data]) {
+  createNewChart([allDates, allHours, firstAndLastDates]) {
     if (this._lineChart) {
       this._lineChart.destroy();
+    }
+
+    console.log(allDates);
+    console.log(allHours);
+
+    if (firstAndLastDates?.earliestDate && firstAndLastDates?.latestDate) {
+      this._startDate.value = this._formatDateForInput(
+        firstAndLastDates.earliestDate
+      );
+      this._endDate.value = this._formatDateForInput(
+        firstAndLastDates.latestDate
+      );
     }
 
     this._lineChart = new Chart(this._ctx, {
       type: 'line',
       data: {
-        labels: labels,
+        labels: allDates,
         datasets: [
           {
             label: 'Hours',
-            data: data,
+            data: allHours,
             fill: false,
             borderColor: 'rgb(75, 192, 192)',
             tension: 0.1,

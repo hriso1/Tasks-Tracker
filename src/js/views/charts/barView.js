@@ -9,7 +9,7 @@ class BarView extends ChartView {
   _endDate = document.getElementById('endBar');
 
   createNewChart(data) {
-    const weeklyHoursAndCatrgory = data[0];
+    const weeklyHoursAndCategory = data[0];
 
     if (data[1]?.earliestDate && data[1]?.latestDate) {
       this._startDate.value = this._formatDateForInput(data[1].earliestDate);
@@ -23,7 +23,7 @@ class BarView extends ChartView {
       type: 'bar',
       data: {
         labels: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-        datasets: weeklyHoursAndCatrgory,
+        datasets: weeklyHoursAndCategory,
       },
       options: {
         plugins: {
